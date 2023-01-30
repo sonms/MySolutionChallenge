@@ -2,15 +2,10 @@ package com.example.mysolutionchallenge
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.mysolutionchallenge.Navigation.*
 import com.example.mysolutionchallenge.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,9 +23,10 @@ class MainActivity : AppCompatActivity() {
     private val TAG_CATEGORY = "category_fragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mBinding.root
+        super.onCreate(savedInstanceState)
+
         setContentView(view)
         setFragment(TAG_HOME, HomeFragment())
         initBottomNavigationBar()
@@ -71,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     setFragment(TAG_HOME, HomeFragment())
                 }
                 R.id.category -> setFragment(TAG_CATEGORY, CategoryFragment())
-                R.id.account -> setFragment(TAG_ACCOUNT, AccountTestFragment())
+                R.id.account -> setFragment(TAG_ACCOUNT, AccountFragment())
                 R.id.search -> setFragment(TAG_SEARCH, SearchFragment())
             }
             true
@@ -103,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         if (search != null) {
             bt.hide(search)
         }
-
+        /////////////////
         if (tag == TAG_HOME) {
             if (home != null) {
                 bt.show(home)

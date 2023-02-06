@@ -31,7 +31,8 @@ class NotificationHelper(context : Context?) : ContextWrapper(context) {
             channel.lightColor = Color.GREEN
             //이 채널에 게시된 알림이 전체 또는 수정된 형태로 잠금 화면에 표시되는지 여부를 설정
             channel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
-                getManager().createNotificationChannel(channel)
+
+            getManager().createNotificationChannel(channel)
         }
     }
 

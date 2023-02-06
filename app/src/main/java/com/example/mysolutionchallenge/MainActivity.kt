@@ -2,6 +2,7 @@ package com.example.mysolutionchallenge
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
@@ -12,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding : ActivityMainBinding
-    private lateinit var main_content : CoordinatorLayout //xml의 content를 담는 layout
+    private lateinit var main_content : LinearLayout //xml의 content를 담는 layout
     private lateinit var bottom_navigationview : BottomNavigationView
     /*private var homeFragment : HomeFragment? = null
     private var blankFragment: BlankFragment? = null

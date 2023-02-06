@@ -4,4 +4,6 @@ data class PillData(
     var pillName : String,
     var pillTakeTime : String,
 
-)
+) : java.io.Serializable {
+
+}

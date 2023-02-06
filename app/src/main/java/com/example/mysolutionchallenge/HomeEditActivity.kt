@@ -1,20 +1,28 @@
 package com.example.mysolutionchallenge
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TimePicker
+import com.example.mysolutionchallenge.Helper.AlertReceiver
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.databinding.ActivityHomeEditBinding
+import java.text.DateFormat
 import java.util.*
 
 class HomeEditActivity : AppCompatActivity() {
     private lateinit var homeEditBinding: ActivityHomeEditBinding
     private lateinit var timepicker : TimePicker
+    //데이터 추가 및 수정
     private var id = 0
     private var setPill : PillData? = null
     private var pillTime : String? = ""
     private var eSetPill : PillData? = null
+    //알람설정
+    private lateinit var setAlarmTime : Calendar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeEditBinding = ActivityHomeEditBinding.inflate(layoutInflater)
@@ -34,7 +42,13 @@ class HomeEditActivity : AppCompatActivity() {
 
         timepicker = homeEditBinding.pillTimepicker
         timepicker.setOnTimeChangedListener(TimePicker.OnTimeChangedListener { view, hourOfDay, minute ->
+
+            setAlarmTime = Calendar.getInstance()
             pillTime = "$hourOfDay 시 $minute 분"
+
+            setAlarmTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            setAlarmTime.set(Calendar.MINUTE, minute)
+            setAlarmTime.set(Calendar.SECOND, 0)
         })
 
 
@@ -48,6 +62,9 @@ class HomeEditActivity : AppCompatActivity() {
                         putExtra("flag", 0)
                     }
                     id += 1
+                    //알람 설정
+                    startAlarm(setAlarmTime, pillContent)
+
                     setResult(RESULT_OK, intent)
                     finish()
                 }
@@ -64,5 +81,44 @@ class HomeEditActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    //알림 설정
+    private fun startAlarm(c : Calendar, content : String?) {
+        var alarmManager : AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        var curTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
+
+        var bundle = Bundle()
+        bundle.putString("time", curTime)
+        bundle.putString("content", content)
+
+        var intent = Intent(this, AlertReceiver::class.java).apply {
+            putExtra("bundle",bundle)
+        }
+
+        //intent를 당장 수행하지 않고 특정시점에 수행하도록 미룰 수 있는 intent
+        var pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0).apply {
+
+        }
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1)
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, setAlarmTime.timeInMillis, pendingIntent)
+
+    }
+
+    //알림 취소
+    private fun cancelAlarm() {
+        var alarmManager : AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        var intent = Intent(this, AlertReceiver::class.java)
+
+        //intent를 당장 수행하지 않고 특정시점에 수행하도록 미룰 수 있는 intent
+        var pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
+
+        alarmManager.cancel(pendingIntent)
     }
 }

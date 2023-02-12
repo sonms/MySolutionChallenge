@@ -1,5 +1,6 @@
 package com.example.mysolutionchallenge
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -69,6 +70,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
             }
+
+            val intent = Intent(this, CameraActivity::class.java)
+            startActivity(intent)
         }
 
         mBinding.bottomNavigationView.setOnItemSelectedListener { item ->

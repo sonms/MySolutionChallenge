@@ -2,6 +2,7 @@ package com.example.mysolutionchallenge
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,7 +15,9 @@ class CameraActivity : AppCompatActivity() {
     val requestCamera = 1
     lateinit var activityResultLauncher : ActivityResultLauncher<Intent>
     private lateinit var cameraBinding: ActivityCameraBinding
-
+    private var launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
+            it -> setGallery(uri = it)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cameraBinding = ActivityCameraBinding.inflate(layoutInflater)
@@ -33,6 +36,10 @@ class CameraActivity : AppCompatActivity() {
             //}
             startActivityForResult(intent, requestCamera)
         }
+
+        cameraBinding.galleryBtn.setOnClickListener {
+            launcher.launch("image/*")
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -42,5 +49,9 @@ class CameraActivity : AppCompatActivity() {
 
             cameraBinding.cameraIV.setImageBitmap(imageBitmap)
         }
+    }
+
+    fun setGallery(uri : Uri?) {
+        cameraBinding.cameraIV.setImageURI(uri)
     }
 }

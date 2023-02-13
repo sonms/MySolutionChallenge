@@ -1,11 +1,18 @@
 package com.example.mysolutionchallenge.Navigation
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.example.mysolutionchallenge.R
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mysolutionchallenge.Adapter.SearchAdapter
+import com.example.mysolutionchallenge.Model.SearchWordData
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,8 +30,21 @@ class SearchFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var mBinding : FragmentSearchBinding
 
+    private lateinit var mBinding : FragmentSearchBinding
+    private var manager : LinearLayoutManager = LinearLayoutManager(activity)
+    private var isEnter = true
+
+    private var searchAdapter : SearchAdapter? = null
+
+
+    //검색 기록용
+    //검색 개수(id)
+    var searchId = 0
+    //검색용
+    private var searchWordList = mutableListOf<SearchWordData?>()
+    //검색 후 나올 내용을 담음
+    private var searchItemList = mutableListOf<SearchWordData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,7 +59,72 @@ class SearchFragment : Fragment() {
     ): View {
         mBinding = FragmentSearchBinding.inflate(inflater, container, false)
 
+        initWordRecyclerView()
+
+        //자동으로 키보드 띄우기
+        searchViewkeyBoard(isEnter)
+        //뒤로가기 버튼 생성
+        (activity as AppCompatActivity?)!!.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
+        mBinding.searchView.queryHint = "검색할 증상 및 병명을 입력해 주세요"
+        mBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            //검색버튼 눌렀을 때 실행
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    searchWordList.add(SearchWordData(searchId, query))
+                    print(query)
+                    print(searchWordList)
+                    searchId += 1
+                    isEnter = false
+                    searchAdapter!!.notifyDataSetChanged()
+                    /*searchWordList.add(SearchWordData(searchId, query))
+                    //앱을 종료 후에도 기록이 남도록
+                    sharedPref!!.setSearchHistory(this@SearchActivity, setKey, searchWordList)
+                    searchWordAdapter!!.notifyDataSetChanged()
+                    searchId += 1
+                    isEnter = false
+                    println(query)
+                    //println(searchWordList)
+                    /*CoroutineScope(Dispatchers.IO).launch {
+                        val intent = Intent(this@SearchActivity, SearchViewAcitivity::class.java).apply {
+                            putExtra("searchword", query)
+                        }
+                        startActivity(intent)
+                    }*/
+                    val intent = Intent().apply {
+                        putExtra("SEARCH", query)
+                        putExtra("flag",4)
+                    }
+                    setResult(RESULT_SEARCH, intent)
+                    finish()*/
+                } else {
+
+                }
+                return true
+            }
+            //검색창에 값이 입력될 때 마다 실행
+            override fun onQueryTextChange(newText: String?): Boolean {
+                print(newText)
+                return true
+            }
+        })
+
+
+
         return mBinding.root
+    }
+
+    private fun initWordRecyclerView() {
+        searchAdapter = SearchAdapter()
+        searchAdapter!!.searchWordData = searchWordList
+        mBinding.searchWordRv.adapter = searchAdapter
+        mBinding.searchWordRv.layoutManager = manager
+        mBinding.searchWordRv.setHasFixedSize(true)
+    }
+
+    private fun searchViewkeyBoard(isEnter : Boolean) {
+        mBinding.searchView.isIconified = !isEnter
     }
 
     companion object {

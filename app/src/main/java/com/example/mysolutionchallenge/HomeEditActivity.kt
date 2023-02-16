@@ -62,7 +62,10 @@ class HomeEditActivity : AppCompatActivity() {
             if (type.equals("add")) {
                 if (pillContent.isNotEmpty()) {
                     if (setAlarmTime == null) {
-
+                        setAlarmTime = Calendar.getInstance()
+                        val h = setAlarmTime!!.get(Calendar.HOUR_OF_DAY)
+                        val m = setAlarmTime!!.get(Calendar.MINUTE)
+                        pillTime = "$h 시 $m 분"
                     }
                     var pill = PillData(id, pillContent, pillTime!!)
 

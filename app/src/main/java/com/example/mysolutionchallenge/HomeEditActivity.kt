@@ -7,10 +7,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TimePicker
+import android.widget.Toast
 import com.example.mysolutionchallenge.Helper.AlertReceiver
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.databinding.ActivityHomeEditBinding
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeEditActivity : AppCompatActivity() {
@@ -22,7 +24,10 @@ class HomeEditActivity : AppCompatActivity() {
     private var pillTime : String? = ""
     private var eSetPill : PillData? = null
     //알람설정
-    private lateinit var setAlarmTime : Calendar
+    private var setAlarmTime : Calendar? = null
+    private var currentTime = System.currentTimeMillis()
+    private var cTime = SimpleDateFormat("kk:mm", Locale("ko", "KR")).format(Date(currentTime))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeEditBinding = ActivityHomeEditBinding.inflate(layoutInflater)
@@ -46,9 +51,9 @@ class HomeEditActivity : AppCompatActivity() {
             setAlarmTime = Calendar.getInstance()
             pillTime = "$hourOfDay 시 $minute 분"
 
-            setAlarmTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            setAlarmTime.set(Calendar.MINUTE, minute)
-            setAlarmTime.set(Calendar.SECOND, 0)
+            setAlarmTime!!.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            setAlarmTime!!.set(Calendar.MINUTE, minute)
+            setAlarmTime!!.set(Calendar.SECOND, 0)
         })
 
 
@@ -56,21 +61,27 @@ class HomeEditActivity : AppCompatActivity() {
             val pillContent = homeEditBinding.pillEdit.text.toString()
             if (type.equals("add")) {
                 if (pillContent.isNotEmpty()) {
-                    var pill = PillData(pillContent, pillTime!!)
+                    if (setAlarmTime == null) {
+
+                    }
+                    var pill = PillData(id, pillContent, pillTime!!)
+
                     val intent = Intent().apply {
                         putExtra("pill", pill)
                         putExtra("flag", 0)
                     }
                     id += 1
                     //알람 설정
-                    startAlarm(setAlarmTime, pillContent)
+                    if (setAlarmTime != null) {
+                        startAlarm(setAlarmTime!!, pillContent)
+                    }
 
                     setResult(RESULT_OK, intent)
                     finish()
                 }
             } else if (type.equals("edit")) {
                 if (pillContent.isNotEmpty()) {
-                    val ePill = PillData(pillContent, pillTime!!)
+                    val ePill = PillData(eSetPill!!.position , pillContent, pillTime!!)
 
                     val intent = Intent().apply {
                         putExtra("pill", ePill)
@@ -106,7 +117,7 @@ class HomeEditActivity : AppCompatActivity() {
             c.add(Calendar.DATE, 1)
         }
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, setAlarmTime.timeInMillis, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, setAlarmTime!!.timeInMillis, pendingIntent)
 
     }
 

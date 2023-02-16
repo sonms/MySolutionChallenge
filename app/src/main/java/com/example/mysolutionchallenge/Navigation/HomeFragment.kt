@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var homeBinding: FragmentHomeBinding
+    private var dataPosition = 0 //수정시 데이터를 가져오기위한 인덱스
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var homeAdapter : HomeAdapter? = null
     private var data : MutableList<PillData?> = mutableListOf()
@@ -68,6 +69,21 @@ class HomeFragment : Fragment() {
             homeAdapter!!.notifyDataSetChanged()
         }
 
+        //recyclerview item클릭 시
+        homeAdapter!!.setItemClickListener(object :HomeAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val todo = data[position]
+                    dataPosition = position
+                    val intent = Intent(activity, HomeEditActivity::class.java).apply {
+                        putExtra("type", "edit")
+                        putExtra("item", todo)
+                    }
+                    requestActivity.launch(intent)
+                }
+            }
+        })
+
         return homeBinding.root
     }
 
@@ -91,6 +107,13 @@ class HomeFragment : Fragment() {
                         }
                         homeAdapter!!.notifyDataSetChanged()
                         Toast.makeText(activity, "추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    //edit
+                    1 -> {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            data[dataPosition] = pill
+                        }
+                        Toast.makeText(activity, "수정되었습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

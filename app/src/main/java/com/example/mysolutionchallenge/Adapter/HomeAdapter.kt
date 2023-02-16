@@ -1,8 +1,11 @@
 package com.example.mysolutionchallenge.Adapter
 
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysolutionchallenge.Model.PillData
@@ -22,6 +25,10 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
             this.position = position
             pillItem.text = pillData.pillName
             pillItemTime.text = pillData.pillTakeTime
+
+            binding.root.setOnClickListener {
+                itemClickListener.onClick(it, layoutPosition, pillItemData[layoutPosition]!!.position)
+            }
         }
     }
 
@@ -33,10 +40,24 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         holder.bind(pillItemData[position]!!, position)
+
     }
 
     override fun getItemCount(): Int {
         return pillItemData.size
+    }
+
+    //데이터 Handle 함수
+
+
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int, itemId: Int)
+    }
+
+    private lateinit var itemClickListener: ItemClickListener
+
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemClickListener = itemClickListener
     }
 
 }

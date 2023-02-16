@@ -40,7 +40,31 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         holder.bind(pillItemData[position]!!, position)
+        binding.homeRemoveIv.setOnClickListener {
+            val builder : AlertDialog.Builder = AlertDialog.Builder(context)
+            val ad : AlertDialog = builder.create()
+            var deleteData = pillItemData[holder.adapterPosition]!!.pillName
+            builder.setTitle(deleteData)
+            builder.setMessage("정말로 삭제하시겠습니까?")
 
+            builder.setNegativeButton("예",
+                DialogInterface.OnClickListener { dialog, which ->
+                    ad.dismiss()
+                    //temp = listData[holder.adapterPosition]!!
+                    //extraditeData()
+                    //testData.add(temp)
+                    //deleteServerData = tempServerData[holder.adapterPosition]!!.api_id
+                    removeData(holder.adapterPosition)
+                    //removeServerData(deleteServerData!!)
+                    //println(deleteServerData)
+                })
+
+            builder.setPositiveButton("아니오",
+                DialogInterface.OnClickListener { dialog, which ->
+                    ad.dismiss()
+                })
+            builder.show()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -48,7 +72,11 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
     }
 
     //데이터 Handle 함수
-
+    fun removeData(position: Int) {
+        pillItemData.removeAt(position)
+        //temp = null
+        notifyItemRemoved(position)
+    }
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int, itemId: Int)

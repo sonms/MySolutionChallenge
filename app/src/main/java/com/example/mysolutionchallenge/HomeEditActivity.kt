@@ -25,8 +25,6 @@ class HomeEditActivity : AppCompatActivity() {
     private var eSetPill : PillData? = null
     //알람설정
     private var setAlarmTime : Calendar? = null
-    private var currentTime = System.currentTimeMillis()
-    private var cTime = SimpleDateFormat("kk:mm", Locale("ko", "KR")).format(Date(currentTime))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

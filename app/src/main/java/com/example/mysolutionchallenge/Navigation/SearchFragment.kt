@@ -1,19 +1,30 @@
 package com.example.mysolutionchallenge.Navigation
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
+import com.example.mysolutionchallenge.MainActivity
+import com.example.mysolutionchallenge.Model.MedicalData
 import com.example.mysolutionchallenge.Model.SearchWordData
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,11 +42,22 @@ class SearchFragment : Fragment() {
     private var param2: String? = null
 
 
+    lateinit var mainActivity: MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        // 2. Context를 액티비티로 형변환해서 할당
+        mainActivity = context as MainActivity
+    }
+
     private lateinit var mBinding : FragmentSearchBinding
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var isEnter = true
-
+    private var allData = mutableStateListOf<MedicalData>()
     private var searchAdapter : SearchAdapter? = null
+
+    private lateinit var myRTD : DatabaseReference
 
 
     //검색 기록용
@@ -47,6 +69,8 @@ class SearchFragment : Fragment() {
     private var searchItemList = mutableListOf<SearchWordData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -58,6 +82,19 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        //firebase 연동
+        //firebase app 초기화 연결
+        FirebaseApp.initializeApp(mainActivity)
+
+        //database 연결
+        val database = Firebase.database
+        myRTD = database.getReference("medical")
+
+
+        getSearchData()
+
+        /*private lateinit var realTimeDatabase = Firebase.database
+        val myRTD = realTimeDatabase.getReference("medical")*/
 
         initWordRecyclerView()
 
@@ -78,6 +115,7 @@ class SearchFragment : Fragment() {
                     searchId += 1
                     isEnter = false
                     searchAdapter!!.notifyDataSetChanged()
+
                     /*searchWordList.add(SearchWordData(searchId, query))
                     //앱을 종료 후에도 기록이 남도록
                     sharedPref!!.setSearchHistory(this@SearchActivity, setKey, searchWordList)
@@ -105,7 +143,7 @@ class SearchFragment : Fragment() {
             }
             //검색창에 값이 입력될 때 마다 실행
             override fun onQueryTextChange(newText: String?): Boolean {
-                print(newText)
+
                 return true
             }
         })
@@ -125,6 +163,43 @@ class SearchFragment : Fragment() {
 
     private fun searchViewkeyBoard(isEnter : Boolean) {
         mBinding.searchView.isIconified = !isEnter
+    }
+
+    private fun getSearchData() {
+        /*val postListener: ValueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                allData.clear()
+                m_nCount = dataSnapshot.childrenCount.toInt()
+                var name: String
+                for (postSnapshot in dataSnapshot.children) {
+                    if (postSnapshot.child("username").getValue(String::class.java) != null) {
+                        name = postSnapshot.child("username").getValue(String::class.java)
+                        m_arritems.add(name)
+                    }
+                }
+                m_adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w("FirebaseDatabase", "onCancelled", databaseError.toException())
+            }
+        }*/
+        myRTD.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ss in snapshot.children) {
+                    val temp = ss.value as Map<*, *>
+                    println(temp.filter { it.key == "sub_title"})
+                    //allData.add(MedicalData(temp.filter { it.key == "sub_title"}.toString(),  ))
+                    //println(temp.filter { it.key == "title" })
+                    //println(temp.filter { it.key == "content" })
+                    //allData.add(MedicalData(temp[1].toString()))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     companion object {

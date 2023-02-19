@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,7 +48,7 @@ class SearchFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        // 2. Context를 액티비티로 형변환해서 할당
+        // Context를 액티비티로 형변환해서 할당
         mainActivity = context as MainActivity
     }
 
@@ -56,7 +57,7 @@ class SearchFragment : Fragment() {
     private var isEnter = true
     private var allData = mutableStateListOf<MedicalData>()
     private var searchAdapter : SearchAdapter? = null
-
+    private var filterData = mutableListOf<MedicalData>()
     private lateinit var myRTD : DatabaseReference
 
 
@@ -109,12 +110,25 @@ class SearchFragment : Fragment() {
             //검색버튼 눌렀을 때 실행
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
+                    //검색 기록
                     searchWordList.add(SearchWordData(searchId, query))
                     print(query)
                     print(searchWordList)
                     searchId += 1
                     isEnter = false
                     searchAdapter!!.notifyDataSetChanged()
+
+
+                    //검색 기능
+                    val filterString = query.toString().lowercase(Locale.getDefault()).trim {it < ' '}
+
+                    for (searchItem in allData) {
+                        if (searchItem!!.content!!.lowercase(Locale.getDefault()).contains(filterString)) {
+                            //println("tem - $tem")
+                            filterData.add(searchItem)
+                            println(filterData)
+                        }
+                    }
 
                     /*searchWordList.add(SearchWordData(searchId, query))
                     //앱을 종료 후에도 기록이 남도록
@@ -189,7 +203,11 @@ class SearchFragment : Fragment() {
                 for (ss in snapshot.children) {
                     val temp = ss.value as Map<*, *>
                     println(temp.filter { it.key == "sub_title"})
-                    //allData.add(MedicalData(temp.filter { it.key == "sub_title"}.toString(),  ))
+                    allData.add(MedicalData(
+                        temp.filter { it.key == "sub_title"}.toString(),
+                        temp.filter { it.key == "title"}.toString(),
+                        temp.filter { it.key == "content"}.toString(),
+                        ))
                     //println(temp.filter { it.key == "title" })
                     //println(temp.filter { it.key == "content" })
                     //allData.add(MedicalData(temp[1].toString()))

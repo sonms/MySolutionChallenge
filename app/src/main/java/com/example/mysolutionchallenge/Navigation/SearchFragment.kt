@@ -1,16 +1,21 @@
 package com.example.mysolutionchallenge.Navigation
 
 import android.content.Context
+import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
+import com.example.mysolutionchallenge.Adapter.SearchItemAdapter
 import com.example.mysolutionchallenge.MainActivity
 import com.example.mysolutionchallenge.Model.MedicalData
 import com.example.mysolutionchallenge.Model.SearchWordData
@@ -55,9 +60,12 @@ class SearchFragment : Fragment() {
     private lateinit var mBinding : FragmentSearchBinding
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var isEnter = true
-    private var allData = mutableStateListOf<MedicalData>()
+    //검색어
     private var searchAdapter : SearchAdapter? = null
-    private var filterData = mutableListOf<MedicalData>()
+    //검색 후 내용
+    private var searchItemAdapter : SearchItemAdapter? = null
+    private var filterData = mutableListOf<MedicalData?>()
+    //파이어베이스 데이터 연결
     private lateinit var myRTD : DatabaseReference
 
 
@@ -67,11 +75,11 @@ class SearchFragment : Fragment() {
     //검색용
     private var searchWordList = mutableListOf<SearchWordData?>()
     //검색 후 나올 내용을 담음
+    var searchItemPosition = 0
+    private var allData = mutableStateListOf<MedicalData>()
     private var searchItemList = mutableListOf<SearchWordData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -99,10 +107,11 @@ class SearchFragment : Fragment() {
 
         initWordRecyclerView()
 
+
         //자동으로 키보드 띄우기
         searchViewkeyBoard(isEnter)
-        //뒤로가기 버튼 생성
-        (activity as AppCompatActivity?)!!.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //뒤로가기 버튼 생성 -> 의미없음 메뉴에있는거라
+        //(activity as AppCompatActivity?)!!.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
         mBinding.searchView.queryHint = "검색할 증상 및 병명을 입력해 주세요"
@@ -118,6 +127,12 @@ class SearchFragment : Fragment() {
                     isEnter = false
                     searchAdapter!!.notifyDataSetChanged()
 
+                    mBinding.searchWordRv.visibility = View.GONE
+                    mBinding.searchItemRv.visibility = View.VISIBLE
+
+                    if (mBinding.searchWordRv.visibility == View.GONE) {
+                        initItemRecyclerView()
+                    }
 
                     //검색 기능
                     val filterString = query.toString().lowercase(Locale.getDefault()).trim {it < ' '}
@@ -126,9 +141,12 @@ class SearchFragment : Fragment() {
                         if (searchItem!!.content!!.lowercase(Locale.getDefault()).contains(filterString)) {
                             //println("tem - $tem")
                             filterData.add(searchItem)
+                            searchItemAdapter!!.notifyDataSetChanged()
                             println(filterData)
                         }
                     }
+
+
 
                     /*searchWordList.add(SearchWordData(searchId, query))
                     //앱을 종료 후에도 기록이 남도록
@@ -157,7 +175,10 @@ class SearchFragment : Fragment() {
             }
             //검색창에 값이 입력될 때 마다 실행
             override fun onQueryTextChange(newText: String?): Boolean {
-
+                if (newText.isNullOrEmpty()) {
+                    mBinding.searchWordRv.visibility = View.VISIBLE
+                    mBinding.searchItemRv.visibility = View.GONE
+                }
                 return true
             }
         })
@@ -174,6 +195,16 @@ class SearchFragment : Fragment() {
         mBinding.searchWordRv.layoutManager = manager
         mBinding.searchWordRv.setHasFixedSize(true)
     }
+
+    private fun initItemRecyclerView() {
+        searchItemAdapter = SearchItemAdapter()
+        searchItemAdapter!!.searchItemData = filterData
+        mBinding.searchItemRv.adapter = searchItemAdapter
+        mBinding.searchItemRv.layoutManager = LinearLayoutManager(activity)
+        mBinding.searchItemRv.setHasFixedSize(true)
+    }
+
+
 
     private fun searchViewkeyBoard(isEnter : Boolean) {
         mBinding.searchView.isIconified = !isEnter
@@ -207,7 +238,9 @@ class SearchFragment : Fragment() {
                         temp.filter { it.key == "sub_title"}.toString(),
                         temp.filter { it.key == "title"}.toString(),
                         temp.filter { it.key == "content"}.toString(),
+                        searchItemPosition
                         ))
+                    searchItemPosition += 1
                     //println(temp.filter { it.key == "title" })
                     //println(temp.filter { it.key == "content" })
                     //allData.add(MedicalData(temp[1].toString()))
@@ -219,6 +252,8 @@ class SearchFragment : Fragment() {
             }
         })
     }
+
+
 
     companion object {
         /**

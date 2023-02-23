@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor1"
     tools:context=".MainActivity">
 
     <!--
@@ -15,6 +16,7 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/backgroundcolor1"
         android:orientation="horizontal"
         />
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -22,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:backgroundTint="?attr/bottomnavibackground"
         app:fabCradleMargin="15dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="5dp">
@@ -32,6 +35,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginEnd="16dp"
+            android:backgroundTint="?attr/bottomnavibackground"
+            app:itemIconTint="?attr/tintcolor"
+            app:itemTextColor="?attr/tintcolor"
             app:menu="@menu/bottom_navigation_menu" />
     </com.google.android.material.bottomappbar.BottomAppBar>
 

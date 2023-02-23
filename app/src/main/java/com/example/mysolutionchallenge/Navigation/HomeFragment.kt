@@ -17,6 +17,7 @@ import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.R
 import com.example.mysolutionchallenge.databinding.FragmentHomeBinding
+import com.example.mytodolist.SharedPref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +43,8 @@ class HomeFragment : Fragment() {
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var homeAdapter : HomeAdapter? = null
     private var data : MutableList<PillData?> = mutableListOf()
-
+    //상태유지
+    var sharedPref : SharedPref? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,13 @@ class HomeFragment : Fragment() {
     ): View? {
         homeBinding = FragmentHomeBinding.inflate(inflater,container,false)
         //tempData = data
+
+        sharedPref = this.context?.let { SharedPref(it) }
+        if (sharedPref!!.loadNightModeState()) {
+            context?.setTheme(R.style.darktheme)
+        } else {
+            context?.setTheme(R.style.AppTheme)
+        }
 
         initRecyclerView()
 

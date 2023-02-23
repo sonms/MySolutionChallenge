@@ -4,9 +4,10 @@
 
     <stroke
         android:width="3dp"
+        android:color="?attr/modeselect"
         />
     <solid
-        android:color="@color/white"
+        android:color="?attr/backgroundcolor1"
         />
     <padding
         android:bottom="2dp"

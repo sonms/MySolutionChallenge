@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mysolutionchallenge.Navigation.*
 import com.example.mysolutionchallenge.databinding.ActivityMainBinding
+import com.example.mytodolist.SharedPref
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -29,8 +30,15 @@ class MainActivity : AppCompatActivity() {
     private val TAG_SEARCH = "search_fragment"
     private val TAG_ACCOUNT = "account_fragment"
     private val TAG_CATEGORY = "category_fragment"
-
+    private var sharedPref : SharedPref? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPref = SharedPref(this)
+        if (sharedPref!!.loadNightModeState()) {
+            setTheme(R.style.darktheme)
+        } else {
+            setTheme(R.style.AppTheme)
+        }
+
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mBinding.root
         super.onCreate(savedInstanceState)

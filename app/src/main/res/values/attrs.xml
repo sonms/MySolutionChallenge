@@ -10,5 +10,6 @@
         <attr name="floatbutton" format="color"/>
         <attr name="modeselect" format="color"/>
         <attr name="cardColor" format="color"/>
+        <attr name="textsize" format="reference"/>
     </declare-styleable>
 </resources>

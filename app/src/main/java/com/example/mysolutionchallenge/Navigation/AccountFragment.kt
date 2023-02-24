@@ -36,7 +36,10 @@ class AccountFragment : PreferenceFragmentCompat() {
     private lateinit var accountBinding: FragmentAccountBinding
     //상태유지
     var sharedPref : SharedPref? = null
-    var themePreference : SwitchPreferenceCompat? = null
+    var darkthemePreference : SwitchPreferenceCompat? = null
+    var smallthemePreference : SwitchPreferenceCompat? = null
+    var mediumthemePreference : SwitchPreferenceCompat? = null
+    var largethemePreference : SwitchPreferenceCompat? = null
     var logoutPreference : Preference? = null
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,21 +69,21 @@ class AccountFragment : PreferenceFragmentCompat() {
 
         setPreferencesFromResource(R.xml.preference, rootKey)
 
-        themePreference = findPreference("themeKey")
+        darkthemePreference = findPreference("themeKey0")
         /*if (sharedPref!!.loadNightModeState()) {
             themePreference!!.isChecked = true
         }*/
-        themePreference!!.setOnPreferenceChangeListener { preference, newValue ->
+        darkthemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
             var isChecked = false
             if (newValue as Boolean) {
                 isChecked = newValue
             }
             if (isChecked) {
-                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey", true).apply()
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", true).apply()
                 sharedPref!!.setNightModeState(true)
                 restartApp()
             } else {
-                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey", false).apply()
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", false).apply()
                 sharedPref!!.setNightModeState(false)
                 restartApp()
             }

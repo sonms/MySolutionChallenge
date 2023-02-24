@@ -36,6 +36,19 @@
         <item name="cardColor">#3D4155</item>
     </style>
 
+    <style name="smalltextsizetheme" parent="AppTheme">
+        <item name="textsize">@dimen/main_text_size_0</item>
+    </style>
+
+    <style name="mediumtextsizetheme" parent="AppTheme">
+        <item name="textsize">@dimen/main_text_size_1</item>
+    </style>
+
+    <style name="largetextsizetheme" parent="AppTheme">
+        <item name="textsize">@dimen/main_text_size_2</item>
+    </style>
+
+
     <style name="dialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:colorAccent">@color/colorAccent</item>
     </style>

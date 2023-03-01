@@ -75,5 +75,17 @@
             />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:layout="@layout/preferences_style"
+        >
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout="@layout/preferences_style"
+        >
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

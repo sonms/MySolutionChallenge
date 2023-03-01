@@ -1,5 +1,6 @@
 package com.example.mysolutionchallenge.Navigation
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.Image
@@ -9,16 +10,22 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mysolutionchallenge.Adapter.HomeAdapter
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
 import com.example.mysolutionchallenge.Adapter.SearchItemAdapter
+import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.MainActivity
 import com.example.mysolutionchallenge.Model.MedicalData
+import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.Model.SearchWordData
+import com.example.mysolutionchallenge.SearchItemViewActivity
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
@@ -29,6 +36,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -183,9 +193,47 @@ class SearchFragment : Fragment() {
             }
         })
 
+        searchItemAdapter!!.setItemClickListener(object : SearchItemAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                val searchItem = allData[position]
+                CoroutineScope(Dispatchers.IO).launch {
+                    val searchitem = filterData[position]
+                    //dataPosition = position
+                    val intent = Intent(activity, SearchItemViewActivity::class.java).apply {
+                        putExtra("type", "view")
+                        putExtra("item", searchItem)
+                    }
+                    requestActivity.launch(intent)
+                }
+            }
+        })
+
+        /*homeAdapter!!.setItemClickListener(object : HomeAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val todo = data[position]
+                    dataPosition = position
+                    val intent = Intent(activity, HomeEditActivity::class.java).apply {
+                        putExtra("type", "edit")
+                        putExtra("item", todo)
+                    }
+                    requestActivity.launch(intent)
+                }
+            }
+        })*/
 
 
         return mBinding.root
+    }
+
+    private val requestActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+        when (it.resultCode) {
+            Activity.RESULT_OK -> {
+                when (it.data?.getIntExtra("flag", -1)) {
+
+                }
+            }
+        }
     }
 
     private fun initWordRecyclerView() {

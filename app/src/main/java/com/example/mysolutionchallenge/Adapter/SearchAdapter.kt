@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mysolutionchallenge.Model.SearchWordData
 import com.example.mysolutionchallenge.databinding.SearchItemLayoutBinding
 import com.example.mysolutionchallenge.databinding.SearchWordLayoutBinding
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
@@ -59,49 +60,13 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         }
     }
 
-    inner class SearchItemViewHolder(private val binding : SearchItemLayoutBinding ) : RecyclerView.ViewHolder(binding.root) {
-        private var position : Int? = null
-        var searchItem_tv = binding.searchItemTv
-        fun bind(search: SearchWordData, position : Int) {
-            this.position = position
-            searchItem_tv.text = search.searchWordText
-
-            binding.root.setOnClickListener {
-                itemClickListener.onClick(it,layoutPosition,searchWordData[layoutPosition]!!.id)
-            }
-
-            binding.searchRemoveIv.setOnClickListener {
-                val builder : AlertDialog.Builder = AlertDialog.Builder(context)
-                val ad : AlertDialog = builder.create()
-                var deleteData = searchItemData[this.layoutPosition]!!.searchWordText
-                builder.setTitle(deleteData)
-                builder.setMessage("정말로 삭제하시겠습니까?")
-
-                builder.setNegativeButton("예",
-                    DialogInterface.OnClickListener { dialog, which ->
-                        ad.dismiss()
-                        removeData(this.layoutPosition)
-                    })
-
-                builder.setPositiveButton("아니오",
-                    DialogInterface.OnClickListener { dialog, which ->
-                        ad.dismiss()
-                    })
-                builder.show()
-            }
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
         binding = SearchWordLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return if (viewType == RV_TYPE_WORD) {
-            SearchWordViewHolder(binding)
-        } else {
-            val binding = SearchItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            SearchItemViewHolder(binding)
-        }
+        return SearchWordViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -109,10 +74,6 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
             holder.bind(searchWordData[position]!!, position)
             val content : SearchWordData = searchWordData[position]!!
             holder.searchWord_tv.text = content!!.searchWordText
-        } else if (holder is SearchItemViewHolder){
-            holder.bind(searchItemData[position]!!, position)
-            val content : SearchWordData = searchItemData[position]!!
-            holder.searchItem_tv.text = content!!.searchWordText
         }
     }
 

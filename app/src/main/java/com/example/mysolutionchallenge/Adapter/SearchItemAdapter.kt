@@ -16,32 +16,36 @@ import com.example.mysolutionchallenge.databinding.SearchWordLayoutBinding
 
 
 class SearchItemAdapter : RecyclerView.Adapter<SearchItemAdapter.SearchItemViewHolder>(){
-    private lateinit var binding : SearchItemLayoutBinding
+    private lateinit var searchItemLayoutBinding : SearchItemLayoutBinding
     var searchItemData = mutableListOf<MedicalData?>()
     private lateinit var context : Context
 
-    inner class SearchItemViewHolder(private val binding : SearchItemLayoutBinding ) : RecyclerView.ViewHolder(binding.root) {
+
+    inner class SearchItemViewHolder(var searchItemLayoutBinding : SearchItemLayoutBinding ) : RecyclerView.ViewHolder(searchItemLayoutBinding.root) {
         private var position : Int? = null
-        var searchItemContent = binding.searchItemTv
+        var searchItemContent = searchItemLayoutBinding.searchItemTv
 
         fun bind(searchData: MedicalData, position : Int) {
             this.position = position
             searchItemContent.text = searchData.content
 
-            binding.root.setOnClickListener {
-                itemClickListener.onClick(it, layoutPosition, searchItemData[layoutPosition]!!.position)
+            searchItemLayoutBinding.root.setOnClickListener {
+                itemClickListener!!.onClick(it,layoutPosition,searchItemData[layoutPosition]!!.position)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchItemViewHolder {
+        var inflater : LayoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         context = parent.context
-        binding = SearchItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SearchItemViewHolder(binding)
+        searchItemLayoutBinding = SearchItemLayoutBinding.inflate(inflater, parent, false)
+        return SearchItemViewHolder(searchItemLayoutBinding)
     }
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
         holder.bind(searchItemData[position]!!, position)
+        val content : MedicalData = searchItemData[position]!!
+        holder.searchItemContent.text = content!!.content
     }
 
     override fun getItemCount(): Int {
@@ -59,10 +63,12 @@ class SearchItemAdapter : RecyclerView.Adapter<SearchItemAdapter.SearchItemViewH
         fun onClick(view: View, position: Int, itemId: Int)
     }
 
-    private lateinit var itemClickListener: ItemClickListener
+    private var itemClickListener: SearchItemAdapter.ItemClickListener? = null
 
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
+    fun setItemClickListener(itemClickListener: SearchItemAdapter.ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
+
+
 
 }

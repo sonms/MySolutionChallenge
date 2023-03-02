@@ -36,7 +36,6 @@
         <activity
             android:name=".SearchItemViewActivity"
             android:exported="false"
-            android:label="@string/title_activity_chat_bot"
             android:theme="@style/Theme.MySolutionChallenge.NoActionBar" />
         <activity
             android:name=".MainActivity"

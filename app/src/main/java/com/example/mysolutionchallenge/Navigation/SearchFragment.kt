@@ -3,7 +3,7 @@ package com.example.mysolutionchallenge.Navigation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.media.Image
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -73,7 +73,7 @@ class SearchFragment : Fragment() {
     //검색어
     private var searchAdapter : SearchAdapter? = null
     //검색 후 내용
-    private var searchItemAdapter : SearchItemAdapter? = null
+    private var searchItemAdapter : SearchItemAdapter? = SearchItemAdapter()
     private var filterData = mutableListOf<MedicalData?>()
     //파이어베이스 데이터 연결
     private lateinit var myRTD : DatabaseReference
@@ -116,7 +116,7 @@ class SearchFragment : Fragment() {
         val myRTD = realTimeDatabase.getReference("medical")*/
 
         initWordRecyclerView()
-
+        initItemRecyclerView()
 
         //자동으로 키보드 띄우기
         searchViewkeyBoard(isEnter)
@@ -140,9 +140,7 @@ class SearchFragment : Fragment() {
                     mBinding.searchWordRv.visibility = View.GONE
                     mBinding.searchItemRv.visibility = View.VISIBLE
 
-                    if (mBinding.searchWordRv.visibility == View.GONE) {
-                        initItemRecyclerView()
-                    }
+
 
                     //검색 기능
                     val filterString = query.toString().lowercase(Locale.getDefault()).trim {it < ' '}
@@ -193,20 +191,7 @@ class SearchFragment : Fragment() {
             }
         })
 
-        searchItemAdapter!!.setItemClickListener(object : SearchItemAdapter.ItemClickListener{
-            override fun onClick(view: View, position: Int, itemId: Int) {
-                val searchItem = allData[position]
-                CoroutineScope(Dispatchers.IO).launch {
-                    val searchitem = filterData[position]
-                    //dataPosition = position
-                    val intent = Intent(activity, SearchItemViewActivity::class.java).apply {
-                        putExtra("type", "view")
-                        putExtra("item", searchItem)
-                    }
-                    requestActivity.launch(intent)
-                }
-            }
-        })
+
 
         /*homeAdapter!!.setItemClickListener(object : HomeAdapter.ItemClickListener{
             override fun onClick(view: View, position: Int, itemId: Int) {
@@ -221,6 +206,27 @@ class SearchFragment : Fragment() {
                 }
             }
         })*/
+        searchAdapter!!.setItemClickListener(object : SearchAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                val searchWord = searchWordList[position]
+                Toast.makeText(activity, "$searchWord", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        searchItemAdapter!!.setItemClickListener(object : SearchItemAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val searchitem = filterData[position]
+                    //dataPosition = position
+                    val intent = Intent(activity, SearchItemViewActivity::class.java).apply {
+                        putExtra("type", "view")
+                        putExtra("item", searchitem)
+                    }
+                    requestActivity.launch(intent)
+                }
+            }
+        })
+
 
 
         return mBinding.root
@@ -228,9 +234,13 @@ class SearchFragment : Fragment() {
 
     private val requestActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
         when (it.resultCode) {
-            Activity.RESULT_OK -> {
-                when (it.data?.getIntExtra("flag", -1)) {
+            RESULT_OK -> {
+                val pill = it.data?.getSerializableExtra("pill") as PillData
 
+                when (it.data?.getIntExtra("flag", -1)) {
+                    0 -> {
+                        Toast.makeText(activity, "추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

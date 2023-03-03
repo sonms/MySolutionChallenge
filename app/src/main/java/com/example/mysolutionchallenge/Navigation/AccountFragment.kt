@@ -38,10 +38,10 @@ class AccountFragment : PreferenceFragmentCompat() {
     var sharedPref : SharedPref? = null
     var darkthemePreference : SwitchPreferenceCompat? = null
     var smallthemePreference : SwitchPreferenceCompat? = null
-    var mediumthemePreference : SwitchPreferenceCompat? = null
+    var middlethemePreference : SwitchPreferenceCompat? = null
     var largethemePreference : SwitchPreferenceCompat? = null
     var logoutPreference : Preference? = null
-
+    var isChecked = false
     /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -70,11 +70,14 @@ class AccountFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preference, rootKey)
 
         darkthemePreference = findPreference("themeKey0")
+        smallthemePreference = findPreference("themeKey1")
+        middlethemePreference = findPreference("themeKey2")
+        largethemePreference = findPreference("themeKey3")
         /*if (sharedPref!!.loadNightModeState()) {
             themePreference!!.isChecked = true
         }*/
         darkthemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
-            var isChecked = false
+            //var isChecked = false
             if (newValue as Boolean) {
                 isChecked = newValue
             }
@@ -85,6 +88,57 @@ class AccountFragment : PreferenceFragmentCompat() {
             } else {
                 preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", false).apply()
                 sharedPref!!.setNightModeState(false)
+                restartApp()
+            }
+            return@setOnPreferenceChangeListener true
+        }
+
+        smallthemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
+            //var isChecked = false
+            if (newValue as Boolean) {
+                isChecked = newValue
+            }
+            if (isChecked) {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", true).apply()
+                sharedPref!!.setSmallModeState(true)
+                restartApp()
+            } else {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", false).apply()
+                sharedPref!!.setSmallModeState(false)
+                restartApp()
+            }
+            return@setOnPreferenceChangeListener true
+        }
+
+        middlethemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
+            //var isChecked = false
+            if (newValue as Boolean) {
+                isChecked = newValue
+            }
+            if (isChecked) {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", true).apply()
+                sharedPref!!.setMiddleModeState(true)
+                restartApp()
+            } else {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", false).apply()
+                sharedPref!!.setMiddleModeState(false)
+                restartApp()
+            }
+            return@setOnPreferenceChangeListener true
+        }
+
+        largethemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
+            //var isChecked = false
+            if (newValue as Boolean) {
+                isChecked = newValue
+            }
+            if (isChecked) {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", true).apply()
+                sharedPref!!.setLargeModeState(true)
+                restartApp()
+            } else {
+                preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", false).apply()
+                sharedPref!!.setLargeModeState(false)
                 restartApp()
             }
             return@setOnPreferenceChangeListener true

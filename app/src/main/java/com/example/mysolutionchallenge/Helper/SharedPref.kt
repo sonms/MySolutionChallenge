@@ -8,7 +8,7 @@ import org.json.JSONException
 
 
 class SharedPref(context: Context) {
-    var mySharedPref: SharedPreferences
+    var mySharedPref: SharedPreferences //
     var storeSharedPref : SharedPreferences
     init {
         mySharedPref = context.getSharedPreferences("filename", Context.MODE_PRIVATE)
@@ -23,6 +23,36 @@ class SharedPref(context: Context) {
 
     fun loadNightModeState(): Boolean {
         return mySharedPref.getBoolean("NightMode", false)
+    }
+
+    fun setSmallModeState(state: Boolean?) {
+        val editor = mySharedPref.edit()
+        editor.putBoolean("SmallMode", state!!)
+        editor.apply()
+    }
+
+    fun loadSmallModeState(): Boolean {
+        return mySharedPref.getBoolean("SmallMode", false)
+    }
+
+    fun setMiddleModeState(state: Boolean?) {
+        val editor = mySharedPref.edit()
+        editor.putBoolean("MiddleMode", state!!)
+        editor.apply()
+    }
+
+    fun loadMiddleModeState(): Boolean {
+        return mySharedPref.getBoolean("MiddleMode", false)
+    }
+
+    fun setLargeModeState(state: Boolean?) {
+        val editor = mySharedPref.edit()
+        editor.putBoolean("LargeMode", state!!)
+        editor.apply()
+    }
+
+    fun loadLargeModeState(): Boolean {
+        return mySharedPref.getBoolean("LargeMode", false)
     }
 
     fun setSearchHistory(context: Context, key: String, values: MutableList<SearchWordData?>) {

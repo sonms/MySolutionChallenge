@@ -68,6 +68,7 @@
         android:id="@+id/medical_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textSize="?attr/textsize"
         />
 
 

@@ -24,7 +24,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_word_rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="790dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +35,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_item_rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="790dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

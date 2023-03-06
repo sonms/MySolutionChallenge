@@ -53,12 +53,12 @@ class SearchItemViewActivity : AppCompatActivity() {
         val type = intent.getStringExtra("type")
 
         if (type.equals("view")) {
-            mBinding.medicalTitle.text = "테스트"
             setMedicalContent = intent.getSerializableExtra("item") as MedicalData?
-            mBinding.medicalContent.text = setMedicalContent.toString()
+            mBinding.medicalTitle.text = setMedicalContent!!.title.toString()
+            mBinding.medicalContent.text = setMedicalContent!!.content.toString()
         }
-
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {

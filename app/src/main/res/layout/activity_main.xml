@@ -15,10 +15,9 @@
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="805dp"
         android:background="?attr/backgroundcolor1"
-        android:orientation="horizontal"
-        />
+        android:orientation="horizontal" />
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--실질적으로 사용자에게 보여주는 리스트-->
+    <string-array name="theme">
+        <item>다크 테마</item>
+        <item>작은 테마</item>
+        <item>기본 테마</item>
+        <item>큰 테마</item>
+    </string-array>
+    <!--실질적으로 sharedpreference에 저장될 값-->
+    <string-array name="theme_value">
+        <item>DarkTheme</item>
+        <item>SmallTheme</item>
+        <item>AppTheme</item>
+        <item>LargeTheme</item>
+    </string-array>
+</resources>

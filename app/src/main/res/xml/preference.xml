@@ -53,6 +53,15 @@
             />
     </PreferenceCategory>
 
+    <ListPreference
+        android:entries="@array/theme"
+        android:entryValues="@array/theme_value"
+        android:defaultValue="AppTheme"
+        android:key="themeList"
+        android:summary="테마"
+        android:title="테마 변경"
+        />
+
     <PreferenceCategory
         android:title="알림 설정"
         android:layout="@layout/preferences_style"

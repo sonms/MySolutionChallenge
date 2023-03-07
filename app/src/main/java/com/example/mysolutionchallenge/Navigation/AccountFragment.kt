@@ -3,12 +3,14 @@ package com.example.mysolutionchallenge.Navigation
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -87,6 +89,24 @@ class AccountFragment : PreferenceFragmentCompat() {
         /*if (sharedPref!!.loadNightModeState()) {
             themePreference!!.isChecked = true
         }*/
+        var st = ""
+        val selectTheme = findPreference<ListPreference>("themeList")!!
+        selectTheme.setOnPreferenceChangeListener { preference, newValue ->
+            val index = selectTheme.findIndexOfValue(newValue.toString())
+            selectTheme.summary = selectTheme.entries[index]
+            st = selectTheme.entryValues[index] as String
+            println(st)
+            /*when(selectTheme.entryValues.toString()) {
+                "DarkTheme" -> {
+                    println("darktheme")
+                }
+            }
+
+             */
+            true
+        }
+
+
         darkthemePreference!!.setOnPreferenceChangeListener { preference, newValue ->
             //var isChecked = false
             if (newValue as Boolean) {
@@ -162,10 +182,15 @@ class AccountFragment : PreferenceFragmentCompat() {
         SharedPreferences
             .OnSharedPreferenceChangeListener { sharedPreferences: SharedPreferences?, key:String? ->
                 when (key) {
-                    "themeList" -> {
-                        val summary = pref!!.getString("themeList", sharedPreferences.toString())
-                        themeList?.summary = summary
-                    }
+                    /*"themeList" -> {
+                        val selectTheme = findPreference<ListPreference>("themeList")!!
+                        selectTheme.setOnPreferenceChangeListener { preference, newValue ->
+                            val index = selectTheme.findIndexOfValue(newValue.toString())
+                            selectTheme.summary = selectTheme.entries[index]
+
+                            true
+                        }
+                    }*/
 
                 }
             }
@@ -178,7 +203,7 @@ class AccountFragment : PreferenceFragmentCompat() {
     }
 
     // 리스너 등록
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         pref!!.registerOnSharedPreferenceChangeListener(prefListener)
     }
@@ -187,7 +212,7 @@ class AccountFragment : PreferenceFragmentCompat() {
     override fun onPause() {
         super.onPause()
         pref!!.unregisterOnSharedPreferenceChangeListener(prefListener)
-    }
+    }*/
 
     companion object {
         /**

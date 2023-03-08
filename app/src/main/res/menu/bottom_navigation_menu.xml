@@ -14,7 +14,8 @@
         />
     <item
         android:id="@+id/placeholder"
-        android:title=""
+        android:icon="@drawable/rounditem_background"
+        android:title="Camera"
         android:enabled="true"
         />
     <item

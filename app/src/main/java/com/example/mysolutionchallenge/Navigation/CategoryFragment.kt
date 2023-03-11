@@ -40,6 +40,7 @@ class CategoryFragment : Fragment() {
         categoryBinding = FragmentCategoryBinding.inflate(inflater, container, false)
 
 
+
         return categoryBinding.root
     }
 

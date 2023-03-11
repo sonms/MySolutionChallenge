@@ -13,8 +13,8 @@
         android:enabled="true"
         />
     <item
-        android:id="@+id/placeholder"
-        android:icon="@drawable/rounditem_background"
+        android:id="@+id/cameraMenu"
+        android:icon="@android:drawable/ic_menu_camera"
         android:title="Camera"
         android:enabled="true"
         />

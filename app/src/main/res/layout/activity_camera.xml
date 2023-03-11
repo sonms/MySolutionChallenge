@@ -7,26 +7,26 @@
     tools:context=".CameraActivity">
 
   <Button
-      android:id="@+id/cameraBtn"
+      android:id="@+id/cameraBtn1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="69dp"
       android:layout_marginBottom="55dp"
       android:text="카메라 열기"
-      app:layout_constraintBottom_toTopOf="@+id/cameraIV"
+      app:layout_constraintBottom_toTopOf="@+id/cameraIV1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.264"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
-      android:id="@+id/galleryBtn"
+      android:id="@+id/galleryBtn1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="69dp"
       android:layout_marginBottom="55dp"
       android:text="갤러리 열기"
-      app:layout_constraintBottom_toTopOf="@+id/cameraIV"
+      app:layout_constraintBottom_toTopOf="@+id/cameraIV1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.709"
       app:layout_constraintStart_toStartOf="parent"
@@ -34,13 +34,13 @@
       app:layout_constraintVertical_bias="0.0" />
 
   <ImageView
-      android:id="@+id/cameraIV"
+      android:id="@+id/cameraIV1"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:layout_marginBottom="278dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/cameraBtn" />
+      app:layout_constraintTop_toBottomOf="@+id/cameraBtn1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG_SEARCH = "search_fragment"
     private val TAG_ACCOUNT = "account_fragment"
     private val TAG_CATEGORY = "category_fragment"
+    private val TAG_CAMERA = "camera_fragment"
     private var sharedPref : SharedPref? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPref = SharedPref(this)
@@ -56,9 +57,9 @@ class MainActivity : AppCompatActivity() {
         //바텀네비게이션 음영 삭제
         bottom_navigationview.background = null
         //가운데 메뉴가 비워져 있기 때문에 비활성화화
-        bottom_navigationview.menu.getItem(2).isEnabled = false
+        //bottom_navigationview.menu.getItem(2).isEnabled = false
 
-        mBinding.chatFab.setOnClickListener {
+        /*mBinding.chatFab.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this@MainActivity.applicationContext,
                     android.Manifest.permission.CAMERA
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, CameraActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
         mBinding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -104,6 +105,9 @@ class MainActivity : AppCompatActivity() {
                     }*/
                     setFragment(TAG_HOME, HomeFragment())
                 }
+                R.id.cameraMenu -> {
+                    setFragment(TAG_CAMERA, CameraFragment())
+                }
                 R.id.category -> setFragment(TAG_CATEGORY, CategoryFragment())
                 R.id.account -> setFragment(TAG_ACCOUNT, AccountFragment())
                 R.id.search -> setFragment(TAG_SEARCH, SearchFragment())
@@ -124,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         val category = manager.findFragmentByTag(TAG_CATEGORY)
         val account = manager.findFragmentByTag(TAG_ACCOUNT)
         val search = manager.findFragmentByTag(TAG_SEARCH)
+        val camera = manager.findFragmentByTag(TAG_CAMERA)
 
         if (home != null) {
             bt.hide(home)
@@ -136,6 +141,9 @@ class MainActivity : AppCompatActivity() {
         }
         if (search != null) {
             bt.hide(search)
+        }
+        if (camera != null) {
+            bt.hide(camera)
         }
         /////////////////
         if (tag == TAG_HOME) {
@@ -153,6 +161,10 @@ class MainActivity : AppCompatActivity() {
         } else if (tag == TAG_CATEGORY) {
             if (category != null) {
                 bt.show(category)
+            }
+        } else if (tag == TAG_CAMERA) {
+            if (camera != null) {
+                bt.show(camera)
             }
         }
 

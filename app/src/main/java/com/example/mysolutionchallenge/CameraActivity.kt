@@ -14,16 +14,16 @@ import com.example.mysolutionchallenge.databinding.ActivityCameraBinding
 class CameraActivity : AppCompatActivity() {
     val requestCamera = 1
     lateinit var activityResultLauncher : ActivityResultLauncher<Intent>
-    private lateinit var cameraBinding: ActivityCameraBinding
+    private lateinit var cameraBinding1: ActivityCameraBinding
     private var launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             it -> setGallery(uri = it)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cameraBinding = ActivityCameraBinding.inflate(layoutInflater)
-        setContentView(cameraBinding.root)
+        cameraBinding1 = ActivityCameraBinding.inflate(layoutInflater)
+        setContentView(cameraBinding1.root)
 
-        cameraBinding.cameraBtn.setOnClickListener {
+        cameraBinding1.cameraBtn1.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)//.also {
                 /*imageCaptureIntent -> imageCaptureIntent.resolveActivity(packageManager)?.also {
                     activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())  { result ->
@@ -37,7 +37,7 @@ class CameraActivity : AppCompatActivity() {
             startActivityForResult(intent, requestCamera)
         }
 
-        cameraBinding.galleryBtn.setOnClickListener {
+        cameraBinding1.galleryBtn1.setOnClickListener {
             launcher.launch("image/*")
         }
     }
@@ -47,11 +47,11 @@ class CameraActivity : AppCompatActivity() {
         if (requestCode == requestCamera && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
 
-            cameraBinding.cameraIV.setImageBitmap(imageBitmap)
+            cameraBinding1.cameraIV1.setImageBitmap(imageBitmap)
         }
     }
 
     fun setGallery(uri : Uri?) {
-        cameraBinding.cameraIV.setImageURI(uri)
+        cameraBinding1.cameraIV1.setImageURI(uri)
     }
 }

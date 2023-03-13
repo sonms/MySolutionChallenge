@@ -16,6 +16,7 @@
         <item name="floatbutton">#4E5DB3</item>
         <item name="modeselect">#000000</item>
         <item name="cardColor">#00BCD4</item>
+        <item name="android:alertDialogTheme">@style/dialogStyle</item>
     </style>
 
 
@@ -37,8 +38,27 @@
     </style>
 
 
-    <style name="dialogStyle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:colorAccent">@color/colorAccent</item>
+    <style name="dialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:buttonTint">@color/primary</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/buttonBarButtonStyle.Neutral</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/buttonBarButtonStyle.Positive</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/buttonBarButtonStyle.Negative</item>
+    </style>
+
+    <style name="buttonBarButtonStyle" parent="Widget.AppCompat.Button.Colored">
+    </style>
+
+    <style name="buttonBarButtonStyle.Neutral">
+    </style>
+
+    <style name="buttonBarButtonStyle.Negative">
+        <item name="backgroundTint">@color/colorAccent</item>
+    </style>
+
+    <style name="buttonBarButtonStyle.Positive">
+        <item name="backgroundTint">@color/colorAccent</item>
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">

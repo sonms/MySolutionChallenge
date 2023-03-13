@@ -1,10 +1,18 @@
 package com.example.mysolutionchallenge.Navigation
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.compose.ui.graphics.Color
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mysolutionchallenge.Adapter.CategoryAdapter
+import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.R
 import com.example.mysolutionchallenge.databinding.FragmentCategoryBinding
 
@@ -24,6 +32,9 @@ class CategoryFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var categoryBinding: FragmentCategoryBinding
+    private lateinit var categoryAdapter: CategoryAdapter
+    private var manager : LinearLayoutManager = LinearLayoutManager(activity)
+    private var categoryNameData : MutableList<CategoryData?> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +50,38 @@ class CategoryFragment : Fragment() {
     ): View? {
         categoryBinding = FragmentCategoryBinding.inflate(inflater, container, false)
 
+        initRecyclerView()
 
+        categoryBinding.addcategoryIV.setOnClickListener {
+            val et = EditText(activity)
+            et.gravity = Gravity.CENTER
+            val builder : AlertDialog.Builder = AlertDialog.Builder(activity)
+            val ad : AlertDialog = builder.create()
+            builder.setTitle("카테고리 이름")
+            builder.setView(et)
+            builder.setPositiveButton("확인",DialogInterface.OnClickListener { dialogInterface, i ->
+                categoryNameData.add(CategoryData(0, et.text.toString()))
+            })
+            builder.setNegativeButton("취소",DialogInterface.OnClickListener { dialogInterface, i ->
+                ad.dismiss()
+            })
+            builder.show()
+
+            categoryAdapter!!.notifyDataSetChanged()
+        }
 
         return categoryBinding.root
+    }
+
+    private fun initRecyclerView() {
+        categoryAdapter = CategoryAdapter()
+        categoryAdapter!!.categoryItemData = categoryNameData
+        categoryBinding.categoryRV.adapter = categoryAdapter
+        //레이아웃 뒤집기 안씀
+        //manager.reverseLayout = true
+        //manager.stackFromEnd = true
+        categoryBinding.categoryRV.setHasFixedSize(true)
+        categoryBinding.categoryRV.layoutManager = manager
     }
 
     companion object {

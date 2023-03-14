@@ -9,11 +9,13 @@ import android.os.Bundle
 import android.widget.TimePicker
 import android.widget.Toast
 import com.example.mysolutionchallenge.Helper.AlertReceiver
+import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.databinding.ActivityHomeEditBinding
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeEditActivity : AppCompatActivity() {
     private lateinit var homeEditBinding: ActivityHomeEditBinding
@@ -25,6 +27,10 @@ class HomeEditActivity : AppCompatActivity() {
     private var eSetPill : PillData? = null
     //알람설정
     private var setAlarmTime : Calendar? = null
+    //카테고리 데이터
+    private var setCategoryData : ArrayList<CategoryData?> = ArrayList()
+    private var s = ""
+    private var passedIntent = intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +38,7 @@ class HomeEditActivity : AppCompatActivity() {
         setContentView(homeEditBinding.root)
 
         val type = intent.getStringExtra("type")
+        val cType = intent.getStringExtra("cType")
 
         if (type.equals("add")) {
             homeEditBinding.pillEditBtn.text = "추가하기"
@@ -40,6 +47,13 @@ class HomeEditActivity : AppCompatActivity() {
             homeEditBinding.pillEdit.setText(eSetPill!!.pillName)
             homeEditBinding.pillEditBtn.text = "수정하기"
         }
+
+        if (cType.equals("category")) {
+            s = intent.getSerializableExtra("categoryData") as String
+        } else {
+            println("%%%%%%%%%%%%%%%5null")
+        }
+
 
 
 
@@ -91,6 +105,19 @@ class HomeEditActivity : AppCompatActivity() {
                     setResult(RESULT_OK, intent)
                     finish()
                 }
+            }
+        }
+
+        homeEditBinding.testbtn.setOnClickListener {
+            Toast.makeText(this, setCategoryData.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun processIntent(intent : Intent) {
+        if (intent != null) {
+            setCategoryData = intent.getSerializableExtra("categoryData") as ArrayList<CategoryData?>
+            if (setCategoryData != null) {
+                Toast.makeText(this, setCategoryData.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.HomeAdapter
 import com.example.mysolutionchallenge.HomeEditActivity
+import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.R
 import com.example.mysolutionchallenge.databinding.FragmentHomeBinding
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var homeAdapter : HomeAdapter? = null
     private var data : MutableList<PillData?> = mutableListOf()
+    private var categoryTempData = mutableListOf<CategoryData?>()
     //상태유지
     var sharedPref : SharedPref? = null
 
@@ -73,6 +75,9 @@ class HomeFragment : Fragment() {
         homeBinding.homeItemAdd.setOnClickListener {
             val intent = Intent(activity, HomeEditActivity::class.java).apply {
                 putExtra("type", "add")
+
+                putExtra("cType", "category")
+                putExtra("categoryData", categoryTempData as ArrayList<CategoryData?>)
             }
             requestActivity.launch(intent)
             homeAdapter!!.notifyDataSetChanged()
@@ -133,6 +138,7 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         homeAdapter = HomeAdapter()
         homeAdapter!!.pillItemData = data
+        categoryTempData = homeAdapter!!.tempData
         homeBinding.recyclerView.adapter = homeAdapter
         //레이아웃 뒤집기 안씀
         //manager.reverseLayout = true

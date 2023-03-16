@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.CategoryAdapter
+import com.example.mysolutionchallenge.Adapter.HomeAdapter
 import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
@@ -46,6 +47,7 @@ class CategoryFragment : Fragment() {
     private var categoryNameData : MutableList<CategoryData?> = mutableListOf()
     //home에 전송할 역할을 하는 데이터
     private var transmitCategoryData : ArrayList<CategoryData?> = ArrayList()
+    private var homeAdapter : HomeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,13 +80,8 @@ class CategoryFragment : Fragment() {
                     categoryNameData.add(CategoryData(0, et.text.toString()))
                     transmitCategoryData.add(CategoryData(0, et.text.toString()))
 
-                    val intent = Intent(activity, HomeEditActivity::class.java)
-
-                    intent.apply {
-                        putExtra("cType", "category")
-                        putExtra("categoryData", et.text.toString())
-                    }
-
+                    homeAdapter!!.tempData.add(CategoryData(0, et.text.toString()))
+                    println(homeAdapter!!.tempData)
                 }
             })
             builder.setNegativeButton("취소",DialogInterface.OnClickListener { dialogInterface, i ->
@@ -95,6 +92,7 @@ class CategoryFragment : Fragment() {
             builder.show()
 
             categoryAdapter!!.notifyDataSetChanged()
+            homeAdapter!!.notifyDataSetChanged()
         }
 
         return categoryBinding.root
@@ -120,6 +118,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
+        homeAdapter = HomeAdapter()
         categoryAdapter = CategoryAdapter()
         categoryAdapter!!.categoryItemData = categoryNameData
         categoryBinding.categoryRV.adapter = categoryAdapter

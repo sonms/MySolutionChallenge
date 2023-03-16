@@ -49,7 +49,7 @@ class HomeEditActivity : AppCompatActivity() {
         }
 
         if (cType.equals("category")) {
-            s = intent.getSerializableExtra("categoryData") as String
+            setCategoryData = intent.getSerializableExtra("categoryData") as ArrayList<CategoryData?>
         } else {
             println("%%%%%%%%%%%%%%%5null")
         }
@@ -109,18 +109,22 @@ class HomeEditActivity : AppCompatActivity() {
         }
 
         homeEditBinding.testbtn.setOnClickListener {
-            Toast.makeText(this, setCategoryData.toString(), Toast.LENGTH_SHORT).show()
+            if (setCategoryData.size == 0) {
+                println("null")
+            } else {
+                println("$setCategoryData")
+            }
         }
     }
 
-    private fun processIntent(intent : Intent) {
+    /*private fun processIntent(intent : Intent) {
         if (intent != null) {
             setCategoryData = intent.getSerializableExtra("categoryData") as ArrayList<CategoryData?>
             if (setCategoryData != null) {
                 Toast.makeText(this, setCategoryData.toString(), Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    }*/
 
     //알림 설정
     private fun startAlarm(c : Calendar, content : String?) {

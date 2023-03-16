@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.databinding.HomeRvitemLayoutBinding
 
@@ -16,7 +17,8 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
     private lateinit var binding : HomeRvitemLayoutBinding
     var pillItemData = mutableListOf<PillData?>()
     private lateinit var context : Context
-
+    //카테고리 담는 곳
+    var tempData = mutableListOf<CategoryData?>()
     inner class HomeViewHolder(private val binding : HomeRvitemLayoutBinding ) : RecyclerView.ViewHolder(binding.root) {
         private var position : Int? = null
         var pillItem = binding.homePillNameTv
@@ -46,7 +48,6 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
             var deleteData = pillItemData[holder.adapterPosition]!!.pillName
             builder.setTitle(deleteData)
             builder.setMessage("정말로 삭제하시겠습니까?")
-
             builder.setNegativeButton("예",
                 DialogInterface.OnClickListener { dialog, which ->
                     ad.dismiss()

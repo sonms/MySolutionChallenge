@@ -15,10 +15,13 @@ import com.example.mysolutionchallenge.databinding.ActivityMainBinding
 import com.example.mytodolist.SharedPref
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FragmentListener {
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var main_content: LinearLayout //xml의 content를 담는 layout
     private lateinit var bottom_navigationview: BottomNavigationView
+    private var categoryFragment : CategoryFragment? = null
+    private var homeFragment : HomeFragment? = null
+
     private var launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         it
     }
@@ -43,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mBinding.root
         super.onCreate(savedInstanceState)
+
+        categoryFragment = supportFragmentManager.findFragmentById(R.id.category) as CategoryFragment?
+        homeFragment = supportFragmentManager.findFragmentById(R.id.home) as HomeFragment?
 
         setContentView(view)
         setFragment(TAG_HOME, HomeFragment())
@@ -183,6 +189,12 @@ class MainActivity : AppCompatActivity() {
                 ),
                 1000
             )
+        }
+    }
+
+    override fun onCommand(index: Int, message: String?) {
+        if (index == 0) {
+            homeFragment!!.setCategoryData(message!!)
         }
     }
 }

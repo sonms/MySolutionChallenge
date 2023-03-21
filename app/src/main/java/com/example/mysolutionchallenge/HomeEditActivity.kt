@@ -28,7 +28,7 @@ class HomeEditActivity : AppCompatActivity() {
     //알람설정
     private var setAlarmTime : Calendar? = null
     //카테고리 데이터
-    private var setCategoryData : ArrayList<CategoryData?> = ArrayList()
+    private var setCategoryData : ArrayList<String> = ArrayList()
     private var s = ""
     private var passedIntent = intent
 
@@ -38,20 +38,15 @@ class HomeEditActivity : AppCompatActivity() {
         setContentView(homeEditBinding.root)
 
         val type = intent.getStringExtra("type")
-        val cType = intent.getStringExtra("cType")
 
         if (type.equals("add")) {
             homeEditBinding.pillEditBtn.text = "추가하기"
+            setCategoryData = intent.getSerializableExtra("categoryNameData") as ArrayList<String>
+
         } else if (type.equals("edit")) {
             eSetPill = intent.getSerializableExtra("item") as PillData?
             homeEditBinding.pillEdit.setText(eSetPill!!.pillName)
             homeEditBinding.pillEditBtn.text = "수정하기"
-        }
-
-        if (cType.equals("category")) {
-            setCategoryData = intent.getSerializableExtra("categoryData") as ArrayList<CategoryData?>
-        } else {
-            println("%%%%%%%%%%%%%%%5null")
         }
 
 
@@ -112,7 +107,9 @@ class HomeEditActivity : AppCompatActivity() {
             if (setCategoryData.size == 0) {
                 println("null")
             } else {
-                println("$setCategoryData")
+                setCategoryData.forEach {
+                    println(it)
+                }
             }
         }
     }

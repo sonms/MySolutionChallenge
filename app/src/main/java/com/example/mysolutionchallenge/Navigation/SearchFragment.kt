@@ -28,6 +28,7 @@ import com.example.mysolutionchallenge.Model.SearchWordData
 import com.example.mysolutionchallenge.SearchItemViewActivity
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -40,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -76,7 +78,8 @@ class SearchFragment : Fragment() {
     private var searchItemAdapter : SearchItemAdapter? = SearchItemAdapter()
     private var filterData = mutableListOf<MedicalData?>()
     //파이어베이스 데이터 연결
-    private lateinit var myRTD : DatabaseReference
+    private lateinit var medicalRTD : DatabaseReference
+    private lateinit var pillDataRTD : DatabaseReference
 
 
     //검색 기록용
@@ -107,8 +110,8 @@ class SearchFragment : Fragment() {
 
         //database 연결
         val database = Firebase.database
-        myRTD = database.getReference("medical")
-
+        medicalRTD = database.getReference("medical")
+        pillDataRTD = database.getReference("PillData")
 
         getSearchData()
 
@@ -287,7 +290,7 @@ class SearchFragment : Fragment() {
                 Log.w("FirebaseDatabase", "onCancelled", databaseError.toException())
             }
         }*/
-        myRTD.addValueEventListener(object : ValueEventListener {
+        medicalRTD.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ss in snapshot.children) {
                     val temp = ss.value as Map<*, *>
@@ -309,6 +312,21 @@ class SearchFragment : Fragment() {
 
             }
         })
+
+        /*val ref = FirebaseDatabase.getInstance().getReference("/PillData")
+        ref.orderByChild("id").equalTo("200808877").addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val result = snapshot.getValue<HashMap<String, String>>()
+                println(result)
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) { }
+
+        })*/
+
+
     }
 
 

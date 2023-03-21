@@ -136,7 +136,7 @@ class CategoryFragment : Fragment() {
                     val categoryItem = categoryNameData[position]
                     //dataPosition = position
                     val intent = Intent(activity, CategoryItemViewActivity::class.java).apply {
-                        putExtra("type", "edit")
+                        putExtra("type", "categoryItemView")
                         putExtra("item", categoryItem)
                     }
                     requestActivity.launch(intent)

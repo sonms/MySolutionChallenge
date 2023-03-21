@@ -4,13 +4,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
     <application
@@ -22,11 +25,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySolutionChallenge"
         tools:targetApi="31">
+        <activity
+            android:name=".CategoryItemViewActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".Helper.AlertReceiver"
             android:enabled="true"
-            android:exported="false"
-            />
+            android:exported="false" />
+
         <activity
             android:name=".HomeEditActivity"
             android:exported="false" />
@@ -35,8 +42,7 @@
             android:exported="false" />
         <activity
             android:name=".SearchItemViewActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

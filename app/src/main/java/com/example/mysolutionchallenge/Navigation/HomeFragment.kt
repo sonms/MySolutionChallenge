@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
     private var data : MutableList<PillData?> = mutableListOf()
     //카테고리 받아오는 데이터
     private var categoryName = ""
-    private var categoryTempData = mutableListOf<CategoryData?>()
+    private var categoryTempData = ArrayList<String>()
     private var sharedViewModel: SharedViewModel? = null
     //상태유지
     var sharedPref : SharedPref? = null
@@ -80,8 +81,9 @@ class HomeFragment : Fragment() {
         homeBinding.homeItemAdd.setOnClickListener {
             val intent = Intent(activity, HomeEditActivity::class.java).apply {
                 putExtra("type", "add")
+                putExtra("categoryNameData", categoryTempData)
             }
-            Toast.makeText(activity, categoryName, Toast.LENGTH_SHORT).show()
+
             requestActivity.launch(intent)
             homeAdapter!!.notifyDataSetChanged()
         }
@@ -141,10 +143,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        val testObserver = androidx.lifecycle.Observer<String> { textValue ->
-            categoryName = textValue
+        val testObserver = androidx.lifecycle.Observer<kotlin.collections.ArrayList<String>> { textValue ->
+            categoryTempData = textValue
         }
         sharedViewModel!!.getLiveData().observe(viewLifecycleOwner, testObserver)
+
+        //categoryTempData.add(categoryName)
     }
 
     private fun initRecyclerView() {

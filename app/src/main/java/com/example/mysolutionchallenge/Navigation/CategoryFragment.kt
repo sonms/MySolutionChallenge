@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Gravity
@@ -20,12 +21,17 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.CategoryAdapter
 import com.example.mysolutionchallenge.Adapter.HomeAdapter
+import com.example.mysolutionchallenge.CategoryItemViewActivity
 import com.example.mysolutionchallenge.FragmentListener
+import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.Model.SharedViewModel
 import com.example.mysolutionchallenge.databinding.FragmentCategoryBinding
 import com.example.mytodolist.SharedPref
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -48,7 +54,7 @@ class CategoryFragment : Fragment() {
     private var manager : LinearLayoutManager = LinearLayoutManager(activity)
     private var categoryNameData : MutableList<CategoryData?> = mutableListOf()
     //home에 전송할 역할을 하는 데이터
-    private var transmitCategoryData : ArrayList<CategoryData?> = ArrayList()
+    private var transmitCategoryData : ArrayList<String> = ArrayList()
     private var homeAdapter : HomeAdapter? = null
     //
     private var homeFragment: HomeFragment? = null
@@ -88,13 +94,13 @@ class CategoryFragment : Fragment() {
                     Toast.makeText(activity, "카테고리 이름을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
                     categoryNameData.add(CategoryData(0, et.text.toString()))
-                    transmitCategoryData.add(CategoryData(0, et.text.toString()))
+                    transmitCategoryData.add(et.text.toString())
 
                     homeAdapter!!.tempData.add(CategoryData(0, et.text.toString()))
                     println(homeAdapter!!.tempData)
 
                     //livedata
-                    sharedViewModel!!.setLiveData(et.text.toString())
+                    sharedViewModel!!.setLiveData(transmitCategoryData)
 
                     /*val bundle = Bundle()
                     bundle.putString("categoryName", et.text.toString())
@@ -123,6 +129,21 @@ class CategoryFragment : Fragment() {
             homeAdapter!!.notifyDataSetChanged()
         }
 
+        //recyclerview item클릭 시
+        categoryAdapter!!.setItemClickListener(object :CategoryAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, itemId: Int) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val categoryItem = categoryNameData[position]
+                    //dataPosition = position
+                    val intent = Intent(activity, CategoryItemViewActivity::class.java).apply {
+                        putExtra("type", "edit")
+                        putExtra("item", categoryItem)
+                    }
+                    requestActivity.launch(intent)
+                }
+            }
+        })
+
         return categoryBinding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -149,7 +170,7 @@ class CategoryFragment : Fragment() {
             Activity.RESULT_OK -> {
                 //getSerializableExtra = intent의 값을 보내고 받을때사용
                 //타입 변경을 해주지 않으면 Serializable객체로 만들어지니 as로 캐스팅해주자
-                val pill = it.data?.getSerializableExtra("pill") as PillData
+                val categoryItem = it.data?.getSerializableExtra("pill") as CategoryData?
                 //api 33이후 아래로 변경됨
                 /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     getSerializable(key, T::class.java)

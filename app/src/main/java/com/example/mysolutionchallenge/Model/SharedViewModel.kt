@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 
 
 class SharedViewModel : ViewModel() {
-    private val liveData = MutableLiveData<String>()
-    fun getLiveData(): LiveData<String> {
+    private val liveData = MutableLiveData<ArrayList<String>>()
+    fun getLiveData(): LiveData<ArrayList<String>> {
         return liveData
     }
 
-    fun setLiveData(str: String) {
-        liveData.value = str
+    fun setLiveData(arr: ArrayList<String>) {
+        liveData.value = arr
     }
 }

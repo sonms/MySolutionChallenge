@@ -313,7 +313,7 @@ class SearchFragment : Fragment() {
             }
         })
 
-        /*val ref = FirebaseDatabase.getInstance().getReference("/PillData")
+        val ref = FirebaseDatabase.getInstance().getReference("/PillData")
         ref.orderByChild("id").equalTo("200808877").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val result = snapshot.getValue<HashMap<String, String>>()
@@ -324,7 +324,7 @@ class SearchFragment : Fragment() {
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onCancelled(error: DatabaseError) { }
 
-        })*/
+        })
 
 
     }

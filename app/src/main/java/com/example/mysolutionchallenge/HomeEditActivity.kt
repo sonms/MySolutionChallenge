@@ -6,6 +6,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
 import com.example.mysolutionchallenge.Helper.AlertReceiver
@@ -28,14 +32,15 @@ class HomeEditActivity : AppCompatActivity() {
     //알람설정
     private var setAlarmTime : Calendar? = null
     //카테고리 데이터
-    private var setCategoryData : ArrayList<String> = ArrayList()
-    private var s = ""
-    private var passedIntent = intent
-
+    private var setCategoryData : ArrayList<String> = ArrayList() //스피너역할까지
+    private var pos = 0
+    //스피너
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeEditBinding = ActivityHomeEditBinding.inflate(layoutInflater)
         setContentView(homeEditBinding.root)
+
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val type = intent.getStringExtra("type")
 
@@ -43,12 +48,27 @@ class HomeEditActivity : AppCompatActivity() {
             homeEditBinding.pillEditBtn.text = "추가하기"
             setCategoryData = intent.getSerializableExtra("categoryNameData") as ArrayList<String>
 
+            if (setCategoryData.isNotEmpty()) {
+                val myAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, setCategoryData)
+                homeEditBinding.spinner.adapter = myAdapter
+                pos = setCategoryData.size
+            }
+
         } else if (type.equals("edit")) {
             eSetPill = intent.getSerializableExtra("item") as PillData?
             homeEditBinding.pillEdit.setText(eSetPill!!.pillName)
             homeEditBinding.pillEditBtn.text = "수정하기"
         }
 
+        homeEditBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                homeEditBinding.spinnerTV.text = setCategoryData[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@HomeEditActivity, "카테고리를 선택하지 않으셨습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
 
@@ -122,6 +142,20 @@ class HomeEditActivity : AppCompatActivity() {
             }
         }
     }*/
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {
+                val intent = Intent().apply {
+
+                }
+                setResult(7, intent)
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     //알림 설정
     private fun startAlarm(c : Calendar, content : String?) {

@@ -22,4 +22,11 @@
         android:src="@android:drawable/ic_menu_add"
         />
 
+    <Button
+        android:id="@+id/categorytestbtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="end"
+        />
+
 </LinearLayout>

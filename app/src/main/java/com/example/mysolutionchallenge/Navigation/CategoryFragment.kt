@@ -65,6 +65,7 @@ class CategoryFragment : Fragment() {
     var fragmentListener: FragmentListener? = null
     //viewmodel
     private var sharedViewModel: SharedViewModel? = null
+    private var selectCategoryData = HashMap<String, PillData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -144,11 +145,21 @@ class CategoryFragment : Fragment() {
             }
         })
 
+        categoryBinding.categorytestbtn.setOnClickListener {
+            selectCategoryData.forEach {
+                println(it)
+            }
+        }
+
         return categoryBinding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        val selectCategoryObserver = androidx.lifecycle.Observer<kotlin.collections.HashMap<String, PillData>> { textValue ->
+            selectCategoryData = textValue
+        }
+        sharedViewModel!!.getCategoryLiveData().observe(viewLifecycleOwner, selectCategoryObserver)
     }
 
     override fun onAttach(context: Context) {

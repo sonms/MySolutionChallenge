@@ -34,6 +34,7 @@ class HomeEditActivity : AppCompatActivity() {
     //카테고리 데이터
     private var setCategoryData : ArrayList<String> = ArrayList() //스피너역할까지
     private var pos = 0
+    private var categoryString = ""
     //스피너
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +64,7 @@ class HomeEditActivity : AppCompatActivity() {
         homeEditBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 homeEditBinding.spinnerTV.text = setCategoryData[position]
+                categoryString = setCategoryData[position]
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -98,6 +100,7 @@ class HomeEditActivity : AppCompatActivity() {
 
                     val intent = Intent().apply {
                         putExtra("pill", pill)
+                        putExtra("cg", categoryString)
                         putExtra("flag", 0)
                     }
                     id += 1

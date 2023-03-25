@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -49,6 +50,7 @@ class HomeFragment : Fragment() {
     private var categoryName = ""
     private var categoryTempData = ArrayList<String>()
     private var sharedViewModel: SharedViewModel? = null
+    private var selectCategoryData = HashMap<String, PillData>()
     //상태유지
     var sharedPref : SharedPref? = null
 
@@ -113,6 +115,11 @@ class HomeFragment : Fragment() {
                 //getSerializableExtra = intent의 값을 보내고 받을때사용
                 //타입 변경을 해주지 않으면 Serializable객체로 만들어지니 as로 캐스팅해주자
                 val pill = it.data?.getSerializableExtra("pill") as PillData
+                val selectCategory = it.data?.getSerializableExtra("cg") as String
+
+                //선택한 카테고리 및 데이터 추가
+                selectCategoryData[selectCategory] = pill
+
                 //api 33이후 아래로 변경됨
                 /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     getSerializable(key, T::class.java)
@@ -125,6 +132,10 @@ class HomeFragment : Fragment() {
                         CoroutineScope(Dispatchers.IO).launch {
                             data.add(pill)
                         }
+                        //livedata
+                        sharedViewModel!!.setCategoryLiveData(selectCategoryData)
+
+
                         homeAdapter!!.notifyDataSetChanged()
                         Toast.makeText(activity, "추가되었습니다.", Toast.LENGTH_SHORT).show()
                     }

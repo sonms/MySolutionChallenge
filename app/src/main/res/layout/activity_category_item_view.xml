@@ -16,4 +16,10 @@
         android:clickable="true"
         android:focusable="true"
         />
+
+    <Button
+        android:id="@+id/ctestbtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        />
 </LinearLayout>

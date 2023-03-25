@@ -50,7 +50,9 @@ class HomeFragment : Fragment() {
     private var categoryName = ""
     private var categoryTempData = ArrayList<String>()
     private var sharedViewModel: SharedViewModel? = null
-    private var selectCategoryData = HashMap<String, PillData>()
+
+    val categoryArr : ArrayList<PillData> = ArrayList()
+    private var selectCategoryData = HashMap<String, ArrayList<PillData>>()
     //상태유지
     var sharedPref : SharedPref? = null
 
@@ -116,9 +118,12 @@ class HomeFragment : Fragment() {
                 //타입 변경을 해주지 않으면 Serializable객체로 만들어지니 as로 캐스팅해주자
                 val pill = it.data?.getSerializableExtra("pill") as PillData
                 val selectCategory = it.data?.getSerializableExtra("cg") as String
-
+                categoryArr.add(pill)
                 //선택한 카테고리 및 데이터 추가
-                selectCategoryData[selectCategory] = pill
+                if (selectCategory.isNotEmpty()) {
+                    selectCategoryData[selectCategory] = categoryArr
+                }
+
 
                 //api 33이후 아래로 변경됨
                 /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

@@ -65,7 +65,7 @@ class CategoryFragment : Fragment() {
     var fragmentListener: FragmentListener? = null
     //viewmodel
     private var sharedViewModel: SharedViewModel? = null
-    private var selectCategoryData = HashMap<String, PillData>()
+    private var selectCategoryData = HashMap<String, ArrayList<PillData>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -136,9 +136,12 @@ class CategoryFragment : Fragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val categoryItem = categoryNameData[position]
                     //dataPosition = position
+                    val temp = selectCategoryData.filter { it.key == categoryItem!!.categoryName }.values.toList()
+                    val tempArr : ArrayList<List<ArrayList<PillData>>> = ArrayList()
+                    tempArr.add(temp)
                     val intent = Intent(activity, CategoryItemViewActivity::class.java).apply {
                         putExtra("type", "categoryItemView")
-                        putExtra("item", categoryItem)
+                        putExtra("item", tempArr)
                     }
                     requestActivity.launch(intent)
                 }
@@ -156,7 +159,7 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-        val selectCategoryObserver = androidx.lifecycle.Observer<kotlin.collections.HashMap<String, PillData>> { textValue ->
+        val selectCategoryObserver = androidx.lifecycle.Observer<kotlin.collections.HashMap<String, ArrayList<PillData>>> { textValue ->
             selectCategoryData = textValue
         }
         sharedViewModel!!.getCategoryLiveData().observe(viewLifecycleOwner, selectCategoryObserver)

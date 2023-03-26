@@ -25,7 +25,11 @@ import kotlin.collections.ArrayList
 class HomeEditActivity : AppCompatActivity() {
     //뒤로가기
     private val TAG = this.javaClass.simpleName
-
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            finish()
+        }
+    }
     ///
     private lateinit var homeEditBinding: ActivityHomeEditBinding
     private lateinit var timepicker : TimePicker
@@ -47,6 +51,7 @@ class HomeEditActivity : AppCompatActivity() {
         setContentView(homeEditBinding.root)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        this.onBackPressedDispatcher.addCallback(this, callback)
 
         val type = intent.getStringExtra("type")
 

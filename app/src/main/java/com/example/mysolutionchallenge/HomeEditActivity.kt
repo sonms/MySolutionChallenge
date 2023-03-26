@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.example.mysolutionchallenge.Helper.AlertReceiver
 import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
@@ -22,6 +23,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeEditActivity : AppCompatActivity() {
+    //뒤로가기
+    private val TAG = this.javaClass.simpleName
+
+    ///
     private lateinit var homeEditBinding: ActivityHomeEditBinding
     private lateinit var timepicker : TimePicker
     //데이터 추가 및 수정

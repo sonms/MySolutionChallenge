@@ -19,7 +19,7 @@ import com.example.mysolutionchallenge.databinding.SearchWordLayoutBinding
 
 class CategoryItemAdapter : RecyclerView.Adapter<CategoryItemAdapter.CategoryItemRVViewHolder>(){
     private lateinit var categoryItemRVBinding: HomeRvitemLayoutBinding
-    var categoryItemData = mutableListOf<PillData?>()
+    var categoryItemData : ArrayList<PillData> = ArrayList()
     private lateinit var context : Context
 
 
@@ -96,9 +96,9 @@ class CategoryItemAdapter : RecyclerView.Adapter<CategoryItemAdapter.CategoryIte
         fun onClick(view: View, position: Int, itemId: Int)
     }
 
-    private var itemClickListener: CategoryAdapter.ItemClickListener? = null
+    private var itemClickListener: CategoryItemAdapter.ItemClickListener? = null
 
-    fun setItemClickListener(itemClickListener: CategoryAdapter.ItemClickListener) {
+    fun setItemClickListener(itemClickListener: CategoryItemAdapter.ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
 

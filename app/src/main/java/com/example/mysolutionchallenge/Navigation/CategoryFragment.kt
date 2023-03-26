@@ -136,12 +136,13 @@ class CategoryFragment : Fragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val categoryItem = categoryNameData[position]
                     //dataPosition = position
-                    val temp = selectCategoryData.filter { it.key == categoryItem!!.categoryName }.values.toList()
+                    //val temp = selectCategoryData.filter { it.key == categoryItem!!.categoryName }.values.toList()
+                    val st = selectCategoryData[categoryItem!!.categoryName]
+
                     val tempArr : ArrayList<List<ArrayList<PillData>>> = ArrayList()
-                    tempArr.add(temp)
                     val intent = Intent(activity, CategoryItemViewActivity::class.java).apply {
                         putExtra("type", "categoryItemView")
-                        putExtra("item", tempArr)
+                        putExtra("item", st)
                     }
                     requestActivity.launch(intent)
                 }
@@ -184,7 +185,7 @@ class CategoryFragment : Fragment() {
             Activity.RESULT_OK -> {
                 //getSerializableExtra = intent의 값을 보내고 받을때사용
                 //타입 변경을 해주지 않으면 Serializable객체로 만들어지니 as로 캐스팅해주자
-                val categoryItem = it.data?.getSerializableExtra("pill") as CategoryData?
+                //val categoryItem = it.data?.getSerializableExtra("pill") as CategoryData?
                 //api 33이후 아래로 변경됨
                 /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     getSerializable(key, T::class.java)

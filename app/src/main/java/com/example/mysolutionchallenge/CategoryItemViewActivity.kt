@@ -54,10 +54,16 @@ class CategoryItemViewActivity : AppCompatActivity() {
             //t = intent.getSerializableExtra("item") as ArrayList<List<PillData>>
             categoryDataSent = intent.getSerializableExtra("item") as ArrayList<PillData>?
             //st = t[0] //as ArrayList<PillData>
-            for (i in categoryDataSent!!.indices) {
-                categoryItemPillData.add(categoryDataSent?.get(i)!!)
+            if (categoryDataSent != null) {
+                mBinding.categoryItemRV.visibility = View.VISIBLE
+                mBinding.categoryTV.visibility = View.GONE
+                for (i in categoryDataSent!!.indices) {
+                    categoryItemPillData.add(categoryDataSent?.get(i)!!)
+                }
+            } else {
+                mBinding.categoryItemRV.visibility = View.GONE
+                mBinding.categoryTV.visibility = View.VISIBLE
             }
-
         }
 
         //recyclerview item클릭 시

@@ -13,10 +13,14 @@ import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import com.example.mysolutionchallenge.Helper.AlertReceiver
 import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
+import com.example.mysolutionchallenge.Model.SharedViewModel
 import com.example.mysolutionchallenge.databinding.ActivityHomeEditBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +39,6 @@ class HomeEditActivity : AppCompatActivity() {
     private lateinit var timepicker : TimePicker
     //데이터 추가 및 수정
     private var id = 0
-    private var setPill : PillData? = null
     private var pillTime : String? = ""
     private var eSetPill : PillData? = null
     //알람설정
@@ -44,6 +47,10 @@ class HomeEditActivity : AppCompatActivity() {
     private var setCategoryData : ArrayList<String> = ArrayList() //스피너역할까지
     private var pos = 0
     private var categoryString = ""
+
+    //뷰모델
+    private var sharedViewModel: SharedViewModel? = null
+
     //스피너
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,13 +75,27 @@ class HomeEditActivity : AppCompatActivity() {
         } else if (type.equals("edit")) {
             eSetPill = intent.getSerializableExtra("item") as PillData?
             homeEditBinding.pillEdit.setText(eSetPill!!.pillName)
+            setCategoryData = intent.getSerializableExtra("categoryNameData") as ArrayList<String>
             homeEditBinding.pillEditBtn.text = "수정하기"
+
+            if (setCategoryData.isNotEmpty()) {
+                val myAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, setCategoryData)
+                homeEditBinding.spinner.adapter = myAdapter
+                pos = setCategoryData.size
+            }
         }
 
         homeEditBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                do {
+                    if (categoryString.isNotEmpty()) {
+                        homeEditBinding.spinnerTV.text = categoryString
+                    }
+                } while (type == null)
+
                 homeEditBinding.spinnerTV.text = setCategoryData[position]
                 categoryString = setCategoryData[position]
+                Toast.makeText(this@HomeEditActivity, categoryString, Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -124,11 +145,15 @@ class HomeEditActivity : AppCompatActivity() {
                 }
             } else if (type.equals("edit")) {
                 if (pillContent.isNotEmpty()) {
-                    val ePill = PillData(eSetPill!!.position , pillContent, pillTime!!)
+                    val ePill = PillData(eSetPill!!.position , pillContent, eSetPill!!.pillTakeTime)
 
                     val intent = Intent().apply {
                         putExtra("pill", ePill)
+                        putExtra("cg", categoryString)
                         putExtra("flag", 1)
+                    }
+                    if (setAlarmTime != null) {
+                        startAlarm(setAlarmTime!!, pillContent)
                     }
                     setResult(RESULT_OK, intent)
                     finish()

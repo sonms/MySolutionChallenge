@@ -11,11 +11,21 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryItemRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/home_rvitem_layout"
+        android:layout_height="876dp"
         android:clickable="true"
         android:focusable="true"
-        />
+        android:visibility="visible"
+        tools:listitem="@layout/home_rvitem_layout" />
+
+    <TextView
+        android:id="@+id/categoryTV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="카테고리에 저장된 데이터가 없습니다."
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/ctestbtn"

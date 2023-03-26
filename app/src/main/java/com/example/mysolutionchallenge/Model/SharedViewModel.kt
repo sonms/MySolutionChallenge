@@ -12,7 +12,7 @@ class SharedViewModel : ViewModel() {
     private val liveData = MutableLiveData<ArrayList<String>>()
 
     //선택된 카테고리 데이터 받기 pilldata랑 같이
-    private val categoryLiveData = MutableLiveData<HashMap<String, ArrayList<PillData>>>()
+    var categoryLiveData = MutableLiveData<HashMap<String, ArrayList<PillData>>>()
     fun getLiveData(): LiveData<ArrayList<String>> {
         return liveData
     }
@@ -25,7 +25,13 @@ class SharedViewModel : ViewModel() {
         return categoryLiveData
     }
 
-    fun setCategoryLiveData(arr: HashMap<String, ArrayList<PillData>>) {
-        categoryLiveData.value = arr
+    fun setCategoryLiveData(key : String, arr: HashMap<String, ArrayList<PillData>>) {
+        if (key == "add") {
+            categoryLiveData.value = arr
+        }
+    }
+
+    fun removeCategoryLiveData() {
+        categoryLiveData.value!!.clear()
     }
 }

@@ -1,47 +1,37 @@
 package com.example.mysolutionchallenge.Navigation
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mysolutionchallenge.Adapter.HomeAdapter
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
 import com.example.mysolutionchallenge.Adapter.SearchItemAdapter
-import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.MainActivity
 import com.example.mysolutionchallenge.Model.MedicalData
 import com.example.mysolutionchallenge.Model.PillData
+import com.example.mysolutionchallenge.Model.RealPillModel
 import com.example.mysolutionchallenge.Model.SearchWordData
 import com.example.mysolutionchallenge.SearchItemViewActivity
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.ArrayList
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -91,6 +81,9 @@ class SearchFragment : Fragment() {
     var searchItemPosition = 0
     private var allData = mutableStateListOf<MedicalData>()
     private var searchItemList = mutableListOf<SearchWordData>()
+    //
+    var result = mutableListOf<RealPillModel>()
+    var realPillList: ArrayList<RealPillModel> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -213,6 +206,7 @@ class SearchFragment : Fragment() {
             override fun onClick(view: View, position: Int, itemId: Int) {
                 val searchWord = searchWordList[position]
                 Toast.makeText(activity, "$searchWord", Toast.LENGTH_SHORT).show()
+                println(result)
             }
         })
 
@@ -294,11 +288,11 @@ class SearchFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ss in snapshot.children) {
                     val temp = ss.value as Map<*, *>
-                    println(temp.filter { it.key == "sub_title"})
+                    //println(temp.filter { it.key == "sub_title"})
                     allData.add(MedicalData(
-                        temp.filter { it.key == "sub_title"}.toString(),
-                        temp.filter { it.key == "title"}.toString(),
-                        temp.filter { it.key == "content"}.toString(),
+                        temp.filter { it.key == "sub_title"}.values.toString(),
+                        temp.filter { it.key == "title"}.values.toString(),
+                        temp.filter { it.key == "content"}.values.toString(),
                         searchItemPosition
                         ))
                     searchItemPosition += 1
@@ -313,20 +307,47 @@ class SearchFragment : Fragment() {
             }
         })
 
-        val ref = FirebaseDatabase.getInstance().getReference("/PillData")
-        ref.orderByChild("id").equalTo("200808877").addChildEventListener(object : ChildEventListener {
+        val mDatabase = FirebaseDatabase.getInstance().getReference("PillData")
+        /*mDatabase.orderByChild("id").equalTo("200808877").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val result = snapshot.getValue<HashMap<String, String>>()
-                println(result)
+                val testresult = snapshot.getValue<kotlin.collections.List<RealPillModel>>()
+                println("t" + testresult)
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) { }
+            override fun onCancelled(error: DatabaseError) {
+                println("cancel")
+            }
 
+        })*/
+        val s = 200808877
+        val t = s.toDouble()
+
+        val myTopPostsQuery = mDatabase.orderByChild("id").equalTo(t)
+        myTopPostsQuery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                realPillList.clear()
+                for (ss in snapshot.children) {
+                    val temp = ss.value as Map<*, *>
+                    //println(temp.filter { it.key == "sub_title"})
+                    realPillList.add(RealPillModel(
+                        temp.filter { it.key == "id"}.values.toString(),
+                        temp.filter { it.key == "efficacy"}.values.toString(),
+                        temp.filter { it.key == "name"}.values.toString(),
+                    ))
+                    searchItemPosition += 1
+                    //println(temp.filter { it.key == "title" })
+                    //println(temp.filter { it.key == "content" })
+                    //allData.add(MedicalData(temp[1].toString()))
+                    println(realPillList)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "onCancelled")
+            }
         })
-
-
     }
 
 

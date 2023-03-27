@@ -87,19 +87,13 @@ class HomeEditActivity : AppCompatActivity() {
 
         homeEditBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                do {
-                    if (categoryString.isNotEmpty()) {
-                        homeEditBinding.spinnerTV.text = categoryString
-                    }
-                } while (type == null)
-
                 homeEditBinding.spinnerTV.text = setCategoryData[position]
                 categoryString = setCategoryData[position]
                 Toast.makeText(this@HomeEditActivity, categoryString, Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(this@HomeEditActivity, "카테고리를 선택하지 않으셨습니다.", Toast.LENGTH_SHORT).show()
+                homeEditBinding.spinnerTV.text = categoryString
             }
         }
 

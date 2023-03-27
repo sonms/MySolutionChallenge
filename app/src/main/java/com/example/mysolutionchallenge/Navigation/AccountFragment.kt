@@ -95,14 +95,80 @@ class AccountFragment : PreferenceFragmentCompat() {
             val index = selectTheme.findIndexOfValue(newValue.toString())
             selectTheme.summary = selectTheme.entries[index]
             st = selectTheme.entryValues[index] as String
-            println(st)
-            /*when(selectTheme.entryValues.toString()) {
+
+            when(st) {
                 "DarkTheme" -> {
-                    println("darktheme")
+                    //true
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", true).apply()
+                    sharedPref!!.setNightModeState(true)
+
+                    //false
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", false).apply()
+                    sharedPref!!.setSmallModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", false).apply()
+                    sharedPref!!.setMiddleModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", false).apply()
+                    sharedPref!!.setLargeModeState(false)
+                    //
+                    restartApp()
+                }
+
+                "SmallTheme" -> {
+                    //true
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", true).apply()
+                    sharedPref!!.setSmallModeState(true)
+
+                    //false
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", false).apply()
+                    sharedPref!!.setNightModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", false).apply()
+                    sharedPref!!.setMiddleModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", false).apply()
+                    sharedPref!!.setLargeModeState(false)
+                    //
+                    restartApp()
+                }
+
+                "AppTheme" -> {
+                    //true
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", true).apply()
+                    sharedPref!!.setMiddleModeState(true)
+
+                    //false
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", false).apply()
+                    sharedPref!!.setNightModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", false).apply()
+                    sharedPref!!.setSmallModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", false).apply()
+                    sharedPref!!.setLargeModeState(false)
+                    //
+                    restartApp()
+                }
+
+                "LargeTheme" -> {
+                    //true
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey3", true).apply()
+                    sharedPref!!.setLargeModeState(true)
+
+                    //false
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey0", false).apply()
+                    sharedPref!!.setNightModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey2", false).apply()
+                    sharedPref!!.setMiddleModeState(false)
+
+                    preferenceManager.sharedPreferences!!.edit().putBoolean("themeKey1", false).apply()
+                    sharedPref!!.setSmallModeState(false)
+                    //
+                    restartApp()
                 }
             }
-
-             */
             true
         }
 

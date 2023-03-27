@@ -16,6 +16,7 @@
         <item name="floatbutton">#4E5DB3</item>
         <item name="modeselect">#000000</item>
         <item name="cardColor">#00BCD4</item>
+        <item name="textsize">@dimen/main_text_size_1</item>
         <item name="android:alertDialogTheme">@style/dialogStyle</item>
     </style>
 
@@ -35,6 +36,7 @@
         <item name="floatbutton">#1A1A1B</item>
         <item name="modeselect">#FCFCFC</item>
         <item name="cardColor">#3D4155</item>
+        <item name="textsize">@dimen/main_text_size_1</item>
     </style>
 
 
@@ -63,6 +65,10 @@
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/primary</item>
+    </style>
+
+    <style name="darktextsizetheme" parent="AppTheme">
+        <item name="textsize">@dimen/main_text_size_1</item>
     </style>
 
     <style name="smalltextsizetheme" parent="AppTheme">

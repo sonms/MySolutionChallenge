@@ -2,6 +2,7 @@ package com.example.mysolutionchallenge.Navigation
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,10 +10,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mysolutionchallenge.R
 import com.example.mysolutionchallenge.databinding.FragmentCameraBinding
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +39,10 @@ class CameraFragment : Fragment() {
     private val requestCamera = 1
     private var launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             it -> setGallery(uri = it)
+
     }
+    private lateinit var sendImage : Uri
+    private lateinit var storage : FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +57,7 @@ class CameraFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         cameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
-
+        storage = FirebaseStorage.getInstance()
 
         cameraBinding.cameraBtn.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)//.also {
@@ -68,21 +77,54 @@ class CameraFragment : Fragment() {
             launcher.launch("image/*")
         }
 
+        cameraBinding.sendImage.setOnClickListener {
+            val storageRef = storage.reference.child("photo/1.png")
+            //val rivesRef = storageRef.child("photo/1.png")
+            //val uploadTask = rivesRef.putFile(sendImage)
+
+            //이미지 리사이즈
+            /*try {
+                val inputSteam = requireActivity().contentResolver.openInputStream(sendImage)
+                val imgBitmap = BitmapFactory.decodeStream(inputSteam)
+                inputSteam!!.close()
+                cameraBinding.cameraIV.setImageBitmap(imgBitmap)
+            } catch (e : java.lang.Exception) {
+                e.printStackTrace()
+            }*/
+
+            //여기서 생기는 오류는 익명으로 작성해서 올려서 그럼 그래서 로그인을 확인 해야함
+
+            storageRef.putFile(sendImage!!).continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+                //storage에 업로드된 이미지의 downloadurl리턴
+                return@continueWithTask storageRef.downloadUrl
+            }.addOnSuccessListener {
+                Toast.makeText(activity,"성공", Toast.LENGTH_SHORT).show()
+
+                //FireStore에 데이터 저장
+            }.addOnFailureListener {
+                Toast.makeText(activity, "실패", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
         return cameraBinding.root
     }
 
+    //카메라에서 사진 가져올 때
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == requestCamera && resultCode == AppCompatActivity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-
+            sendImage = data.data!!
             cameraBinding.cameraIV.setImageBitmap(imageBitmap)
         }
     }
 
+    //갤러리에서 사진 가져올 때
     fun setGallery(uri : Uri?) {
         cameraBinding.cameraIV.setImageURI(uri)
+        sendImage = uri!!
     }
 
     companion object {

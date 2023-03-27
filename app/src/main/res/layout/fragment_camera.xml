@@ -35,8 +35,8 @@
 
     <ImageView
         android:id="@+id/cameraIV"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="172dp"
         android:layout_marginBottom="54dp"
         app:layout_constraintBottom_toTopOf="@+id/resultTV"
@@ -44,14 +44,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/sendImage"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginBottom="4dp"
+        android:text="검색하기"
+        app:layout_constraintBottom_toTopOf="@+id/resultTV"
+        app:layout_constraintStart_toStartOf="@+id/resultTV" />
+
     <TextView
         android:id="@+id/resultTV"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginBottom="205dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cameraIV" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

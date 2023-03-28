@@ -3,6 +3,8 @@ package com.example.mysolutionchallenge.Navigation
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
 import com.example.mysolutionchallenge.Adapter.SearchItemAdapter
@@ -21,6 +24,7 @@ import com.example.mysolutionchallenge.Model.MedicalData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.Model.RealPillModel
 import com.example.mysolutionchallenge.Model.SearchWordData
+import com.example.mysolutionchallenge.ProgressDialog
 import com.example.mysolutionchallenge.SearchItemViewActivity
 import com.example.mysolutionchallenge.databinding.FragmentSearchBinding
 import com.google.firebase.FirebaseApp
@@ -29,9 +33,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -84,6 +88,10 @@ class SearchFragment : Fragment() {
     //
     var result = mutableListOf<RealPillModel>()
     var realPillList: ArrayList<RealPillModel> = ArrayList()
+    //로딩창
+    lateinit var myProgressDialog : ProgressDialog
+    private var isLoading = true
+    var i = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -106,7 +114,25 @@ class SearchFragment : Fragment() {
         medicalRTD = database.getReference("medical")
         pillDataRTD = database.getReference("PillData")
 
+
+
+        //로딩창 객체 생성
+        myProgressDialog = ProgressDialog(activity)
+        //로딩창 투명
+        myProgressDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        //주변을 클릭해도 종료되지 않게 설정
+        myProgressDialog.setCancelable(false)
         getSearchData()
+
+        //데이터 가져오기 로딩창창
+       do {
+            lifecycleScope.launch {
+                myProgressDialog.show()
+                delay(5000)
+                myProgressDialog.dismiss()
+            }
+        } while (allData.size < 0)
+
 
         /*private lateinit var realTimeDatabase = Firebase.database
         val myRTD = realTimeDatabase.getReference("medical")*/
@@ -124,7 +150,10 @@ class SearchFragment : Fragment() {
         mBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             //검색버튼 눌렀을 때 실행
             override fun onQueryTextSubmit(query: String?): Boolean {
+
                 if (!query.isNullOrEmpty()) {
+
+
                     //검색 기록
                     searchWordList.add(SearchWordData(searchId, query))
                     print(query)
@@ -136,21 +165,19 @@ class SearchFragment : Fragment() {
                     mBinding.searchWordRv.visibility = View.GONE
                     mBinding.searchItemRv.visibility = View.VISIBLE
 
-
-
                     //검색 기능
                     val filterString = query.toString().lowercase(Locale.getDefault()).trim {it < ' '}
 
                     for (searchItem in allData) {
                         if (searchItem!!.content!!.lowercase(Locale.getDefault()).contains(filterString)) {
                             //println("tem - $tem")
+                            myProgressDialog.show()
                             filterData.add(searchItem)
                             searchItemAdapter!!.notifyDataSetChanged()
                             println(filterData)
                         }
+                        i += 1
                     }
-
-
 
                     /*searchWordList.add(SearchWordData(searchId, query))
                     //앱을 종료 후에도 기록이 남도록
@@ -172,10 +199,10 @@ class SearchFragment : Fragment() {
                     }
                     setResult(RESULT_SEARCH, intent)
                     finish()*/
-                } else {
-
                 }
+                myProgressDialog.dismiss()
                 return true
+
             }
             //검색창에 값이 입력될 때 마다 실행
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -185,7 +212,11 @@ class SearchFragment : Fragment() {
                 }
                 return true
             }
+
         })
+
+
+
 
 
 
@@ -266,6 +297,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun getSearchData() {
+
         /*val postListener: ValueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 allData.clear()
@@ -284,6 +316,7 @@ class SearchFragment : Fragment() {
                 Log.w("FirebaseDatabase", "onCancelled", databaseError.toException())
             }
         }*/
+
         medicalRTD.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ss in snapshot.children) {

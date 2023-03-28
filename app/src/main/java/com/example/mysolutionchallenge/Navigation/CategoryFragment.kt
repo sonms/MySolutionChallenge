@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -27,6 +29,7 @@ import com.example.mysolutionchallenge.HomeEditActivity
 import com.example.mysolutionchallenge.Model.CategoryData
 import com.example.mysolutionchallenge.Model.PillData
 import com.example.mysolutionchallenge.Model.SharedViewModel
+import com.example.mysolutionchallenge.ProgressDialog
 import com.example.mysolutionchallenge.databinding.FragmentCategoryBinding
 import com.example.mytodolist.SharedPref
 import kotlinx.coroutines.CoroutineScope
@@ -66,6 +69,8 @@ class CategoryFragment : Fragment() {
     //viewmodel
     private var sharedViewModel: SharedViewModel? = null
     private var selectCategoryData = HashMap<String, ArrayList<PillData>>()
+    //로딩창
+    lateinit var myProgressDialog : ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -81,6 +86,13 @@ class CategoryFragment : Fragment() {
         categoryBinding = FragmentCategoryBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+
+        //로딩창 객체 생성
+        myProgressDialog = ProgressDialog(activity)
+        //로딩창 투명
+        myProgressDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        //주변을 클릭해도 종료되지 않게 설정
+        myProgressDialog.setCancelable(false)
 
         categoryBinding.addcategoryIV.setOnClickListener {
             val et = EditText(activity)
@@ -153,6 +165,7 @@ class CategoryFragment : Fragment() {
             selectCategoryData.forEach {
                 println(it)
             }
+            myProgressDialog.show()
         }
 
         return categoryBinding.root

@@ -58,7 +58,7 @@
         android:entryValues="@array/theme_value"
         android:defaultValue="AppTheme"
         android:key="themeList"
-        android:summary="테마"
+        android:summary="앱이 재시작 됩니다."
         android:title="테마 변경"
         />
 

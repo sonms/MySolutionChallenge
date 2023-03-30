@@ -3,18 +3,14 @@ package com.example.mysolutionchallenge.Navigation
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.IBinder
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.example.mysolutionchallenge.LoginActivity
 import com.example.mysolutionchallenge.MainActivity
 import com.example.mysolutionchallenge.R
 import com.example.mysolutionchallenge.databinding.FragmentAccountBinding
@@ -240,7 +236,30 @@ class AccountFragment : PreferenceFragmentCompat() {
             }
             return@setOnPreferenceChangeListener true
         }
+        logoutPreference = preferenceManager.findPreference("logout")
+        if (logoutPreference != null) {
+            logoutPreference!!.setOnPreferenceClickListener {
+                var auth: FirebaseAuth? = null
+                //로그아웃
+                auth = FirebaseAuth.getInstance()
+                if (auth.currentUser != null) {
+                    auth.signOut()
 
+                    Toast.makeText(activity, "로그아웃되었습니다!", Toast.LENGTH_SHORT).show()
+
+                    //로그아웃되었으니 로그인 화면으로 돌아감
+                    val intent = Intent(activity, LoginActivity::class.java)
+                    //상위 스택제거
+                    //실행하는 액티비티가 스택에 있으면 새로 시작하지 않고 상위 스택 모두 제거.
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(activity, "로그인된 아이디가 없습니다!", Toast.LENGTH_SHORT).show()
+                }
+
+                return@setOnPreferenceClickListener true
+            }
+        }
         //themePreference!!.setOnPreferenceChangeListener(prefListener)
     }
 

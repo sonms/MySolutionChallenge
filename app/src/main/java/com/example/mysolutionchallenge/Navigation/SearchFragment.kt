@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysolutionchallenge.Adapter.SearchAdapter
 import com.example.mysolutionchallenge.Adapter.SearchItemAdapter
+import com.example.mysolutionchallenge.LoginActivity
 import com.example.mysolutionchallenge.MainActivity
 import com.example.mysolutionchallenge.Model.MedicalData
 import com.example.mysolutionchallenge.Model.PillData
@@ -150,7 +151,7 @@ class SearchFragment : Fragment() {
         mBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             //검색버튼 눌렀을 때 실행
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                myProgressDialog.show()
                 if (!query.isNullOrEmpty()) {
 
 
@@ -171,7 +172,7 @@ class SearchFragment : Fragment() {
                     for (searchItem in allData) {
                         if (searchItem!!.content!!.lowercase(Locale.getDefault()).contains(filterString)) {
                             //println("tem - $tem")
-                            myProgressDialog.show()
+
                             filterData.add(searchItem)
                             searchItemAdapter!!.notifyDataSetChanged()
                             println(filterData)

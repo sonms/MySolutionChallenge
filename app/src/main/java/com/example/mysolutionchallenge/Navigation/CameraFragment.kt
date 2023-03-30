@@ -1,24 +1,23 @@
 package com.example.mysolutionchallenge.Navigation
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mysolutionchallenge.R
+import androidx.fragment.app.Fragment
 import com.example.mysolutionchallenge.databinding.FragmentCameraBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import java.io.ByteArrayOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -116,10 +115,11 @@ class CameraFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == requestCamera && resultCode == AppCompatActivity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            sendImage = data.data!!
+            //sendImage = activity?.let { getImageUri(it, imageBitmap) }!!
             cameraBinding.cameraIV.setImageBitmap(imageBitmap)
         }
     }
+
 
     //갤러리에서 사진 가져올 때
     fun setGallery(uri : Uri?) {

@@ -1,10 +1,8 @@
 package com.example.mysolutionchallenge
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat

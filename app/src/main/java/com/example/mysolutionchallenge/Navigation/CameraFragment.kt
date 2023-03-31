@@ -12,9 +12,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.mutableStateListOf
 import androidx.fragment.app.Fragment
 import com.example.mysolutionchallenge.databinding.FragmentCameraBinding
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
@@ -40,6 +43,8 @@ class CameraFragment : Fragment() {
             it -> setGallery(uri = it)
 
     }
+    private val itemList = mutableListOf<String>()
+    val db = Firebase.firestore
     private lateinit var sendImage : Uri
     private lateinit var storage : FirebaseStorage
 
@@ -103,6 +108,7 @@ class CameraFragment : Fragment() {
             }.addOnFailureListener {
                 Toast.makeText(activity, "실패", Toast.LENGTH_SHORT).show()
             }
+            getStoreDataSet()
         }
 
 
@@ -136,6 +142,25 @@ class CameraFragment : Fragment() {
     fun setGallery(uri : Uri?) {
         cameraBinding.cameraIV.setImageURI(uri)
         sendImage = uri!!
+    }
+
+    private fun getStoreDataSet() {
+        db.collection("pill")   // 작업할 컬렉션
+            .get()      // 문서 가져오기
+            .addOnSuccessListener { result ->
+                // 성공할 경우
+                itemList.clear()
+                var item = ""
+                for (document in result) {  // 가져온 문서들은 result에 들어감
+                    item = document["class"] as String
+                    itemList.add(item)
+                }
+                cameraBinding.resultTV.text = item
+            }
+            .addOnFailureListener { exception ->
+                // 실패할 경우
+                Toast.makeText(activity,"데이터 받아오기 실패패패", Toast.LENGTH_SHORT).show()
+            }
     }
 
     companion object {

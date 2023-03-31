@@ -165,7 +165,6 @@ class CategoryFragment : Fragment() {
             selectCategoryData.forEach {
                 println(it)
             }
-            myProgressDialog.show()
         }
 
         return categoryBinding.root

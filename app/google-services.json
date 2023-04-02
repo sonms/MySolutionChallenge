@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1068944484536",
+    "project_id": "mychatbot-5d9d9",
+    "storage_bucket": "mychatbot-5d9d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068944484536:android:3acf1d71e0270487986c4d",
+        "android_client_info": {
+          "package_name": "com.example.mysolutionchallenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068944484536-sjujncffsjuec4j54p5toamb77qev4fr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mysolutionchallenge",
+            "certificate_hash": "89b99c9f01ec56e8acb80fffd0a65ae80e3e6e17"
+          }
+        },
+        {
+          "client_id": "1068944484536-raalm6k3139u607nitfmh0qesscjf9fu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC40al7hNcwJjGT_BYtYnaY9jXNmJtR5UQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068944484536-raalm6k3139u607nitfmh0qesscjf9fu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

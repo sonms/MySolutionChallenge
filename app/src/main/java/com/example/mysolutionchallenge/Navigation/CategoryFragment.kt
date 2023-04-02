@@ -61,8 +61,6 @@ class CategoryFragment : Fragment() {
     private var homeAdapter : HomeAdapter? = null
     //
     private var homeFragment: HomeFragment? = null
-    private var cana : SharedPref? = null
-    var caname : String? = null
     var pref : SharedPreferences? = null
     //interface
     var fragmentListener: FragmentListener? = null
@@ -165,6 +163,7 @@ class CategoryFragment : Fragment() {
             selectCategoryData.forEach {
                 println(it)
             }
+            //myProgressDialog.show()
         }
 
         return categoryBinding.root
